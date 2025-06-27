@@ -1,0 +1,15 @@
+C:\Users\Administrator\Desktop\RealEstateManager\RealEstate.Repository\obj\Debug\net8.0\RealEstate.Repository.csproj.AssemblyReference.cache
+C:\Users\Administrator\Desktop\RealEstateManager\RealEstate.Repository\obj\Debug\net8.0\RealEstate.Repository.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Administrator\Desktop\RealEstateManager\RealEstate.Repository\obj\Debug\net8.0\RealEstate.Repository.AssemblyInfoInputs.cache
+C:\Users\Administrator\Desktop\RealEstateManager\RealEstate.Repository\obj\Debug\net8.0\RealEstate.Repository.AssemblyInfo.cs
+C:\Users\Administrator\Desktop\RealEstateManager\RealEstate.Repository\obj\Debug\net8.0\RealEstate.Repository.csproj.CoreCompileInputs.cache
+C:\Users\Administrator\Desktop\RealEstateManager\RealEstate.Repository\bin\Debug\net8.0\RealEstate.Repository.deps.json
+C:\Users\Administrator\Desktop\RealEstateManager\RealEstate.Repository\bin\Debug\net8.0\RealEstate.Repository.dll
+C:\Users\Administrator\Desktop\RealEstateManager\RealEstate.Repository\bin\Debug\net8.0\RealEstate.Repository.pdb
+C:\Users\Administrator\Desktop\RealEstateManager\RealEstate.Repository\bin\Debug\net8.0\RealEstate.Domain.dll
+C:\Users\Administrator\Desktop\RealEstateManager\RealEstate.Repository\bin\Debug\net8.0\RealEstate.Domain.pdb
+C:\Users\Administrator\Desktop\RealEstateManager\RealEstate.Repository\obj\Debug\net8.0\RealEsta.6C37D390.Up2Date
+C:\Users\Administrator\Desktop\RealEstateManager\RealEstate.Repository\obj\Debug\net8.0\RealEstate.Repository.dll
+C:\Users\Administrator\Desktop\RealEstateManager\RealEstate.Repository\obj\Debug\net8.0\refint\RealEstate.Repository.dll
+C:\Users\Administrator\Desktop\RealEstateManager\RealEstate.Repository\obj\Debug\net8.0\RealEstate.Repository.pdb
+C:\Users\Administrator\Desktop\RealEstateManager\RealEstate.Repository\obj\Debug\net8.0\ref\RealEstate.Repository.dll
