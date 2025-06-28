@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("RealEstate.Repository")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0d989f6cccd6cbcf99c2fccb5c2b08b305f40432")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+479704f458a49500182cfbd1acdbe265d698fddb")]
 [assembly: System.Reflection.AssemblyProductAttribute("RealEstate.Repository")]
 [assembly: System.Reflection.AssemblyTitleAttribute("RealEstate.Repository")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
