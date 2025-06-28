@@ -11,6 +11,6 @@ namespace RealEstate.Domain.DTO
         public string Title { get; set; }
         public string Location { get; set; }
         public string Summary { get; set; }
-        public decimal Price { get; set; }
+        public int Price { get; set; }
     }
 }

@@ -28,10 +28,10 @@ namespace RealEstate.Service.Implementation
         {
             return _favoriteRepository.Get(
                 selector: f => f,
-                predicate: f => f.UserId == userId,
+                predicate: f => f.ClientId == userId,
                 include: x =>
                 {
-                    return x.Include(y => y.Properties).ThenInclude(z => z.Property);
+                    return x.Include(y => y.PropertiesInFavourite).ThenInclude(z => z.Property);
                 });
         }
 
@@ -39,15 +39,15 @@ namespace RealEstate.Service.Implementation
         public void AddToFavorites(Guid propertyId, string userId)
         {
             var favorite = _favoriteRepository.Get(selector: x => x,
-                predicate: x => x.UserId == userId);
+                predicate: x => x.ClientId == userId);
 
             if (favorite == null)
             {
                 favorite = new Favorite
                 {
                     Id = Guid.NewGuid(),
-                    UserId = userId,
-                    Properties = new List<PropertyInFavorite>()
+                    ClientId = userId,
+                    PropertiesInFavourite = new List<PropertyInFavorite>()
                 };
                 _favoriteRepository.Insert(favorite);
             }
@@ -71,7 +71,7 @@ namespace RealEstate.Service.Implementation
         {
 
             var favorite = _favoriteRepository.Get(selector: x => x,
-                predicate: x => x.UserId == userId);
+                predicate: x => x.ClientId == userId);
 
             var relation = _pifRepository.Get(selector: x => x,
                 predicate: p => p.FavoriteId == favorite.Id && p.PropertyId == propertyId);

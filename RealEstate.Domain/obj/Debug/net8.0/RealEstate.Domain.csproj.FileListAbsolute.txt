@@ -6,6 +6,7 @@ C:\Users\Administrator\Desktop\RealEstateManager\RealEstate.Domain\obj\Debug\net
 C:\Users\Administrator\Desktop\RealEstateManager\RealEstate.Domain\obj\Debug\net8.0\RealEstate.Domain.AssemblyInfoInputs.cache
 C:\Users\Administrator\Desktop\RealEstateManager\RealEstate.Domain\obj\Debug\net8.0\RealEstate.Domain.AssemblyInfo.cs
 C:\Users\Administrator\Desktop\RealEstateManager\RealEstate.Domain\obj\Debug\net8.0\RealEstate.Domain.csproj.CoreCompileInputs.cache
+C:\Users\Administrator\Desktop\RealEstateManager\RealEstate.Domain\obj\Debug\net8.0\RealEstate.Domain.sourcelink.json
 C:\Users\Administrator\Desktop\RealEstateManager\RealEstate.Domain\obj\Debug\net8.0\RealEstate.Domain.dll
 C:\Users\Administrator\Desktop\RealEstateManager\RealEstate.Domain\obj\Debug\net8.0\refint\RealEstate.Domain.dll
 C:\Users\Administrator\Desktop\RealEstateManager\RealEstate.Domain\obj\Debug\net8.0\RealEstate.Domain.pdb

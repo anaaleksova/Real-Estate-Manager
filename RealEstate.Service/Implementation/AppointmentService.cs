@@ -58,10 +58,10 @@ namespace RealEstate.Service.Implementation
             var email = new EmailMessage
             {
                 Subject = "Inspection Scheduled",
-                MailTo = appointment.Client.Email,
-                Content = $"Dear {appointment.Client.FirstName} {appointment.Client.LastName},\n\n" +
+                MailTo = appointment.Client.ApplicationUser.Email,
+                Content = $"Dear {appointment.Client.ApplicationUser.FirstName} {appointment.Client.ApplicationUser.LastName},\n\n" +
                           $"Your property inspection is scheduled on {appointment.ScheduledDate:dd MMM yyyy HH:mm} " +
-                          $"for property '{appointment.Property.Title}' with agent {appointment.Agent.FirstName} {appointment.Agent.LastName}."
+                          $"for property '{appointment.Property.Title}' with agent {appointment.Property.Agent.ApplicationUser.FirstName} {appointment.Property.Agent.ApplicationUser.LastName}."
             };
 
             _emailService.SendEmailAsync(email);

@@ -12,14 +12,14 @@ namespace RealEstate.Domain.DomainModels
         public string Title { get; set; }
         public string Address { get; set; }
         public string Description { get; set; }
-        public decimal Price { get; set; }
+        public int Price { get; set; }
         public string Status { get; set; }
         public string AgentId { get; set; }
-        public ApplicationUser Agent { get; set; }
+        public Agent Agent { get; set; }
 
         public ICollection<Appointment> Appointments { get; set; }
-        public ICollection<Favorite> Favorites { get; set; }
-        public virtual ICollection<PropertyInFavorite> Properties { get; set; }
+        public virtual ICollection<PropertyInFavorite> PropertiesInFavourite { get; set; }
+        public virtual ICollection<AgentProperty> AgentProperties { get; set; }
     }
 
 

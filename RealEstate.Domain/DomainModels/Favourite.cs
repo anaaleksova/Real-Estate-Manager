@@ -9,10 +9,10 @@ namespace RealEstate.Domain.DomainModels
 {
     public class Favorite : BaseEntity
     {
-        public string UserId { get; set; }
-        public ApplicationUser User { get; set; }
+        public string ClientId { get; set; }
+        public Client Client { get; set; }
 
-        public virtual ICollection<PropertyInFavorite> Properties { get; set; }
+        public virtual ICollection<PropertyInFavorite> PropertiesInFavourite { get; set; }
     }
 
 }
