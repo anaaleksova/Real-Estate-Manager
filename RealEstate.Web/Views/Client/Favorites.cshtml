@@ -1,0 +1,58 @@
+﻿@model RealEstate.Domain.DomainModels.Favorite
+@{
+    ViewData["Title"] = "My Favorites";
+}
+
+<div class="container">
+    <h2>My Favorite Properties</h2>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (Model?.PropertiesInFavourite != null && Model.PropertiesInFavourite.Any())
+    {
+        <div class="row">
+            @foreach (var favoriteProperty in Model.PropertiesInFavourite)
+            {
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">@favoriteProperty.Property.Title</h5>
+                            <p class="card-text">
+                                <strong>Address:</strong> @favoriteProperty.Property.Address<br>
+                                <strong>Price:</strong> $@favoriteProperty.Property.Price.ToString("N0")<br>
+                                <strong>Status:</strong> @favoriteProperty.Property.Status
+                            </p>
+                            <p class="card-text">@favoriteProperty.Property.Description</p>
+                        </div>
+                        <div class="card-footer">
+                            <a href="@Url.Action("PropertyDetails", new { id = favoriteProperty.Property.Id })"
+                               class="btn btn-primary btn-sm">View Details</a>
+
+                            <form method="post" action="@Url.Action("RemoveFromFavorites")" style="display: inline;">
+                                <input type="hidden" name="propertyId" value="@favoriteProperty.Property.Id" />
+                                <button type="submit" class="btn btn-outline-danger btn-sm"
+                                        onclick="return confirm('Remove from favorites?')">
+                                    <i class="fas fa-heart-broken"></i> Remove
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="text-center mt-5">
+            <h4>No favorite properties yet.</h4>
+            <p>Start browsing properties and add them to your favorites!</p>
+            <a href="@Url.Action("Properties")" class="btn btn-primary">Browse Properties</a>
+        </div>
+    }
+</div>

@@ -170,7 +170,7 @@ namespace RealEstate.Repository.Migrations
                     b.HasIndex("ApplicationUserId")
                         .IsUnique();
 
-                    b.ToTable("Agent");
+                    b.ToTable("Agents");
                 });
 
             modelBuilder.Entity("RealEstate.Domain.DomainModels.AgentProperty", b =>
@@ -191,7 +191,7 @@ namespace RealEstate.Repository.Migrations
 
                     b.HasIndex("PropertyId");
 
-                    b.ToTable("AgentProperty");
+                    b.ToTable("AgentProperties");
                 });
 
             modelBuilder.Entity("RealEstate.Domain.DomainModels.Appointment", b =>
@@ -200,7 +200,7 @@ namespace RealEstate.Repository.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("AgentId")
+                    b.Property<Guid>("AgentId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ClientId")
@@ -246,7 +246,7 @@ namespace RealEstate.Repository.Migrations
                     b.HasIndex("ApplicationUserId")
                         .IsUnique();
 
-                    b.ToTable("Client");
+                    b.ToTable("Clients");
                 });
 
             modelBuilder.Entity("RealEstate.Domain.DomainModels.Favorite", b =>
@@ -365,7 +365,6 @@ namespace RealEstate.Repository.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
@@ -507,9 +506,11 @@ namespace RealEstate.Repository.Migrations
 
             modelBuilder.Entity("RealEstate.Domain.DomainModels.Appointment", b =>
                 {
-                    b.HasOne("RealEstate.Domain.DomainModels.Agent", null)
+                    b.HasOne("RealEstate.Domain.DomainModels.Agent", "Agent")
                         .WithMany("Appointments")
-                        .HasForeignKey("AgentId");
+                        .HasForeignKey("AgentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("RealEstate.Domain.DomainModels.Client", "Client")
                         .WithMany("Appointments")
@@ -522,6 +523,8 @@ namespace RealEstate.Repository.Migrations
                         .HasForeignKey("PropertyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Agent");
 
                     b.Navigation("Client");
 

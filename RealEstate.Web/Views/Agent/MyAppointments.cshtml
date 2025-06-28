@@ -1,0 +1,69 @@
+﻿@model List<RealEstate.Domain.DomainModels.Appointment>
+@{
+    ViewData["Title"] = "My Appointments";
+}
+
+<div class="container">
+    <h2>My Appointments</h2>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (Model.Any())
+    {
+        <div class="row">
+            @foreach (var appointment in Model.OrderBy(a => a.ScheduledDate))
+            {
+                <div class="col-md-6 mb-4">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h6 class="mb-0">@appointment.Property?.Title</h6>
+                            <span class="badge bg-@(appointment.Status == "Scheduled" ? "primary" :
+                                                  appointment.Status == "Completed" ? "success" : "secondary")">
+                                @appointment.Status
+                            </span>
+                        </div>
+                        <div class="card-body">
+                            <p><strong>Date & Time:</strong> @appointment.ScheduledDate.ToString("dd MMM yyyy, HH:mm")</p>
+                            <p><strong>Client:</strong> @appointment.Client?.ApplicationUser?.FullName</p>
+                            <p><strong>Client Email:</strong> @appointment.Client?.ApplicationUser?.Email</p>
+                            <p><strong>Property:</strong> @appointment.Property?.Address</p>
+                        </div>
+                        <div class="card-footer">
+                            @if (appointment.Status == "Scheduled")
+                            {
+                                <form method="post" action="@Url.Action("UpdateAppointmentStatus")" style="display: inline;">
+                                    <input type="hidden" name="appointmentId" value="@appointment.Id" />
+                                    <input type="hidden" name="status" value="Completed" />
+                                    <button type="submit" class="btn btn-sm btn-success">Mark as Completed</button>
+                                </form>
+
+                                <form method="post" action="@Url.Action("UpdateAppointmentStatus")" style="display: inline;">
+                                    <input type="hidden" name="appointmentId" value="@appointment.Id" />
+                                    <input type="hidden" name="status" value="Cancelled" />
+                                    <button type="submit" class="btn btn-sm btn-danger ms-2"
+                                            onclick="return confirm('Cancel this appointment?')">
+                                        Cancel
+                                    </button>
+                                </form>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="text-center mt-5">
+            <h4>No appointments scheduled.</h4>
+            <p>Clients will book appointments for your properties.</p>
+            <a href="@Url.Action("MyProperties")" class="btn btn-primary">Manage Properties</a>
+        </div>
+    }
+</div>

@@ -1,0 +1,75 @@
+﻿@model RealEstate.Domain.DomainModels.Property
+@{
+    ViewData["Title"] = "Property Details";
+    var agents = ViewBag.Agents as List<RealEstate.Domain.DomainModels.Agent>;
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <h2>@Model.Title</h2>
+
+            <div class="card">
+                <div class="card-body">
+                    <h4>Property Information</h4>
+                    <table class="table">
+                        <tr>
+                            <td><strong>Address:</strong></td>
+                            <td>@Model.Address</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Price:</strong></td>
+                            <td>$@Model.Price.ToString("N0")</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Status:</strong></td>
+                            <td><span class="badge bg-primary">@Model.Status</span></td>
+                        </tr>
+                    </table>
+
+                    <h5>Description</h5>
+                    <p>@Model.Description</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Actions</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post" action="@Url.Action("AddToFavorites", "Client")" class="mb-3">
+                        <input type="hidden" name="propertyId" value="@Model.Id" />
+                        <button type="submit" class="btn btn-outline-danger w-100">
+                            <i class="fas fa-heart"></i> Add to Favorites
+                        </button>
+                    </form>
+
+                    <a href="@Url.Action("CreateAppointment", "Client", new { propertyId = Model.Id })"
+                       class="btn btn-success w-100">
+                        <i class="fas fa-calendar"></i> Schedule Appointment
+                    </a>
+                </div>
+            </div>
+
+            @if (agents != null && agents.Any())
+            {
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h5>Available Agents</h5>
+                    </div>
+                    <div class="card-body">
+                        @foreach (var agent in agents)
+                        {
+                            <div class="mb-2">
+                                <strong>@agent.ApplicationUser?.FullName</strong><br>
+                                <small class="text-muted">@agent.ApplicationUser?.Email</small>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

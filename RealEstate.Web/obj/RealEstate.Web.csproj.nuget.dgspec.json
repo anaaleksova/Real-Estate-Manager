@@ -288,6 +288,9 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
+              "C:\\Users\\Administrator\\Desktop\\RealEstateManager\\RealEstate.Repository\\RealEstate.Repository.csproj": {
+                "projectPath": "C:\\Users\\Administrator\\Desktop\\RealEstateManager\\RealEstate.Repository\\RealEstate.Repository.csproj"
+              },
               "C:\\Users\\Administrator\\Desktop\\RealEstateManager\\RealEstate.Service\\RealEstate.Service.csproj": {
                 "projectPath": "C:\\Users\\Administrator\\Desktop\\RealEstateManager\\RealEstate.Service\\RealEstate.Service.csproj"
               }
@@ -330,9 +333,17 @@
               "target": "Package",
               "version": "[8.0.14, )"
             },
+            "Microsoft.EntityFrameworkCore.Sqlite": {
+              "target": "Package",
+              "version": "[8.0.11, )"
+            },
             "Microsoft.EntityFrameworkCore.Tools": {
               "target": "Package",
               "version": "[8.0.14, )"
+            },
+            "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
+              "target": "Package",
+              "version": "[8.0.7, )"
             }
           },
           "imports": [

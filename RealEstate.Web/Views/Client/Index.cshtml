@@ -1,0 +1,53 @@
+﻿@model List<RealEstate.Domain.DomainModels.Property>
+@{
+    ViewData["Title"] = "Available Properties";
+}
+
+<div class="container">
+    <h2>Available Properties</h2>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="row">
+        @foreach (var property in Model)
+        {
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">@property.Title</h5>
+                        <p class="card-text">
+                            <strong>Address:</strong> @property.Address<br>
+                            <strong>Price:</strong> $@property.Price.ToString("N0")<br>
+                            <strong>Status:</strong> @property.Status
+                        </p>
+                        <p class="card-text">@property.Description</p>
+                    </div>
+                    <div class="card-footer">
+                        <a href="@Url.Action("PropertyDetails", "Client", new { id = property.Id })" class="btn btn-primary btn-sm">View Details</a>
+
+                        <form method="post" action="@Url.Action("AddToFavorites", "Client")" style="display: inline;">
+                            <input type="hidden" name="propertyId" value="@property.Id" />
+                            <button type="submit" class="btn btn-outline-danger btn-sm">
+                                <i class="fas fa-heart"></i> Add to Favorites
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="text-center mt-5">
+            <h4>No properties available at the moment.</h4>
+            <p>Please check back later for new listings.</p>
+        </div>
+    }
+</div>
