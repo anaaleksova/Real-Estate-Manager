@@ -14,6 +14,5 @@ namespace RealEstate.Service.Interface
         Property Add(Property property);
         Property Update(Property property);
         Property DeleteById(Guid id);
-        List<Property> GetByAgent(string agentId);
     }
 }

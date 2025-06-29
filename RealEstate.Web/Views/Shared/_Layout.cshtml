@@ -26,38 +26,42 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
 
+                        <!-- Properties Section -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-dark" href="#" role="button" data-bs-toggle="dropdown">
+                                Properties
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" asp-controller="Properties" asp-action="Index">All Properties</a></li>
+                                <li><a class="dropdown-item" asp-controller="Properties" asp-action="Create">Add Property</a></li>
+                            </ul>
+                        </li>
+
+                        <!-- Agents Section -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-dark" href="#" role="button" data-bs-toggle="dropdown">
+                                Agents
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" asp-controller="Agents" asp-action="Index">All Agents</a></li>
+                                <li><a class="dropdown-item" asp-controller="Agents" asp-action="Create">Add Agent</a></li>
+                            </ul>
+                        </li>
+
                         @if (User.Identity.IsAuthenticated)
                         {
-                            @if (User.IsInRole("Client"))
-                            {
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle text-dark" href="#" role="button" data-bs-toggle="dropdown">
-                                        Client Portal
-                                    </a>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" asp-controller="Client" asp-action="Properties">Browse Properties</a></li>
-                                        <li><a class="dropdown-item" asp-controller="Client" asp-action="Favorites">My Favorites</a></li>
-                                        <li><a class="dropdown-item" asp-controller="Client" asp-action="MyAppointments">My Appointments</a></li>
-                                    </ul>
-                                </li>
-                            }
-
-                            @if (User.IsInRole("Agent"))
-                            {
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle text-dark" href="#" role="button" data-bs-toggle="dropdown">
-                                        Agent Portal
-                                    </a>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" asp-controller="Agent" asp-action="MyProperties">My Properties</a></li>
-                                        <li><a class="dropdown-item" asp-controller="Agent" asp-action="CreateProperty">Add Property</a></li>
-                                        <li><a class="dropdown-item" asp-controller="Agent" asp-action="MyAppointments">My Appointments</a></li>
-                                    </ul>
-                                </li>
-                            }
+                            <!-- Client Features -->
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-dark" href="#" role="button" data-bs-toggle="dropdown">
+                                    Client
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" asp-controller="Client" asp-action="Properties">Browse Properties</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Client" asp-action="Favorites">My Favorites</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Client" asp-action="MyAppointments">My Appointments</a></li>
+                                </ul>
+                            </li>
                         }
-                        <!-- КРАЈ НА ДОДАТОКОТ -->
-
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>

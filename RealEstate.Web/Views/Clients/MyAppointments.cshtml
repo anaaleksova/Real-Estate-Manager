@@ -23,11 +23,11 @@
                         <div class="card-body">
                             <p><strong>Date & Time:</strong> @appointment.ScheduledDate.ToString("dd MMM yyyy, HH:mm")</p>
                             <p><strong>Property:</strong> @appointment.Property?.Address</p>
-                            <p><strong>Agent:</strong> @appointment.Agent?.ApplicationUser?.FullName</p>
+                            <p><strong>Agent:</strong> @appointment.Agent?.Name</p>
                         </div>
                         <div class="card-footer">
                             <small class="text-muted">
-                                Agent Contact: @appointment.Agent?.ApplicationUser?.Email
+                                Agent Contact: @appointment.Agent?.Email
                             </small>
                         </div>
                     </div>

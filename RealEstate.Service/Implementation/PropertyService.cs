@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using RealEstate.Domain.DomainModels;
 using RealEstate.Repository;
 using RealEstate.Service.Interface;
@@ -36,28 +37,24 @@ namespace RealEstate.Service.Implementation
 
         public List<Property> GetAll()
         {
-            return _propertyRepository.GetAll(selector: x => x).ToList();
+            return _propertyRepository.GetAll(
+                selector: x => x,
+                include: x => x.Include(p => p.AgentProperties)
+                              .ThenInclude(ap => ap.Agent)).ToList();
         }
 
         public Property? GetById(Guid id)
         {
             return _propertyRepository.Get(
                 selector: x => x,
-                predicate: x => x.Id == id
-            );
+                predicate: x => x.Id == id,
+                include: x => x.Include(p => p.AgentProperties)
+                              .ThenInclude(ap => ap.Agent));
         }
 
         public Property Update(Property property)
         {
             return _propertyRepository.Update(property);
-        }
-
-        public List<Property> GetByAgent(string agentId)
-        {
-            return _propertyRepository.GetAll(
-                selector: x => x,
-                predicate: x => x.AgentId == agentId
-            ).ToList();
         }
     }
 }

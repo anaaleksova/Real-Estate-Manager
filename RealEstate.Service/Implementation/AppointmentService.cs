@@ -52,9 +52,7 @@ namespace RealEstate.Service.Implementation
                 selector: x => x,
                 include: x => x.Include(a => a.Property)
                               .Include(a => a.Client)
-                              .ThenInclude(c => c.ApplicationUser)
-                              .Include(a => a.Agent)
-                              .ThenInclude(ag => ag.ApplicationUser)).ToList();
+                              .ThenInclude(c => c.ApplicationUser)).ToList();
         }
 
         public Appointment GetById(Guid id)
@@ -64,9 +62,7 @@ namespace RealEstate.Service.Implementation
                 predicate: x => x.Id == id,
                 include: x => x.Include(a => a.Property)
                               .Include(a => a.Client)
-                              .ThenInclude(c => c.ApplicationUser)
-                              .Include(a => a.Agent)
-                              .ThenInclude(ag => ag.ApplicationUser));
+                              .ThenInclude(c => c.ApplicationUser));
         }
 
         public Appointment Update(Appointment appointment)
@@ -77,7 +73,6 @@ namespace RealEstate.Service.Implementation
         public void SendEmailReminder(Appointment appointment)
         {
             if (appointment.Client?.ApplicationUser == null ||
-                appointment.Agent?.ApplicationUser == null ||
                 appointment.Property == null)
                 return;
 
@@ -88,24 +83,11 @@ namespace RealEstate.Service.Implementation
                 Content = $"Dear {appointment.Client.ApplicationUser.FullName},\n\n" +
                           $"Your property inspection is scheduled on {appointment.ScheduledDate:dd MMM yyyy HH:mm} " +
                           $"for property '{appointment.Property.Title}' at {appointment.Property.Address}.\n" +
-                          $"Agent: {appointment.Agent.ApplicationUser.FullName}\n" +
-                          $"Best regards,\nReal Estate Team"
-            };
-
-            var agentEmail = new EmailMessage
-            {
-                Subject = "New Property Inspection Appointment",
-                MailTo = appointment.Agent.ApplicationUser.Email,
-                Content = $"Dear {appointment.Agent.ApplicationUser.FullName},\n\n" +
-                          $"You have a new property inspection appointment scheduled on {appointment.ScheduledDate:dd MMM yyyy HH:mm} " +
-                          $"for property '{appointment.Property.Title}' at {appointment.Property.Address}.\n" +
-                          $"Client: {appointment.Client.ApplicationUser.FullName}\n" +
-                          $"Client Email: {appointment.Client.ApplicationUser.Email}\n"+
+                          $"Agent: {appointment.Agent.Name}\n" +
                           $"Best regards,\nReal Estate Team"
             };
 
             _emailService.SendEmailAsync(clientEmail);
-            _emailService.SendEmailAsync(agentEmail);
         }
 
         public Appointment CreateAppointmentWithAgent(Guid propertyId, string clientId, Guid agentId, DateTime scheduledDate, string notes = "")

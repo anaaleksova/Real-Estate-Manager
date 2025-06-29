@@ -1,11 +1,11 @@
 ﻿@model RealEstate.Domain.DomainModels.Property
 @{
     ViewData["Title"] = "Create Property";
+    var agents = ViewBag.AllAgents as List<RealEstate.Domain.DomainModels.Agent>;
 }
 
 <div class="container">
-    <h2>Add New Property</h2>
-
+    <h2>Create New Property</h2>
     <div class="row">
         <div class="col-md-8">
             <form method="post">
@@ -13,13 +13,13 @@
                     <div class="card-body">
                         <div class="mb-3">
                             <label asp-for="Title" class="form-label">Property Title</label>
-                            <input asp-for="Title" class="form-control" placeholder="e.g., Modern 3BR Apartment" />
+                            <input asp-for="Title" class="form-control" />
                             <span asp-validation-for="Title" class="text-danger"></span>
                         </div>
 
                         <div class="mb-3">
                             <label asp-for="Address" class="form-label">Address</label>
-                            <input asp-for="Address" class="form-control" placeholder="Full address" />
+                            <input asp-for="Address" class="form-control" />
                             <span asp-validation-for="Address" class="text-danger"></span>
                         </div>
 
@@ -29,7 +29,6 @@
                                 <input asp-for="Price" type="number" class="form-control" min="0" />
                                 <span asp-validation-for="Price" class="text-danger"></span>
                             </div>
-
                             <div class="col-md-6 mb-3">
                                 <label asp-for="Status" class="form-label">Status</label>
                                 <select asp-for="Status" class="form-select">
@@ -42,15 +41,37 @@
                             </div>
                         </div>
 
+                        <!-- Agent Selection -->
+                        <div class="mb-3">
+                            <label class="form-label">Assign Agents</label>
+                            <select name="SelectedAgentIds" class="form-select" multiple>
+                                @if (agents != null)
+                                {
+                                    @foreach (var agent in agents)
+                                    {
+                                        <option value="@agent.Id">@agent.Name</option>
+                                    }
+                                }
+                            </select>
+                            <small class="form-text text-muted">Hold Ctrl (Cmd on Mac) to select multiple agents for this property</small>
+                        </div>
+
+                        @if (agents == null || !agents.Any())
+                        {
+                            <div class="alert alert-warning">
+                                <strong>No agents available!</strong>
+                                <a href="@Url.Action("Create", "Agent")" class="alert-link">Create an agent first</a>.
+                            </div>
+                        }
+
                         <div class="mb-3">
                             <label asp-for="Description" class="form-label">Description</label>
-                            <textarea asp-for="Description" class="form-control" rows="4"
-                                      placeholder="Detailed description of the property..."></textarea>
+                            <textarea asp-for="Description" class="form-control" rows="4"></textarea>
                             <span asp-validation-for="Description" class="text-danger"></span>
                         </div>
 
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                            <a href="@Url.Action("MyProperties")" class="btn btn-secondary">Cancel</a>
+                            <a href="@Url.Action("Index")" class="btn btn-secondary">Cancel</a>
                             <button type="submit" class="btn btn-primary">Create Property</button>
                         </div>
                     </div>
@@ -59,20 +80,21 @@
         </div>
 
         <div class="col-md-4">
-            <div class="card">
-                <div class="card-header">
-                    <h6>Tips for Better Listings</h6>
+
+            @if (agents != null && agents.Any())
+            {
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h6>Available Agents (@agents.Count)</h6>
+                    </div>
+                    <div class="card-body">
+                        <small class="text-muted">
+                            You can assign multiple agents to handle this property.
+                            Clients will be able to choose from assigned agents when booking appointments.
+                        </small>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <ul class="list-unstyled">
-                        <li><i class="fas fa-check text-success"></i> Use descriptive titles</li>
-                        <li><i class="fas fa-check text-success"></i> Include complete address</li>
-                        <li><i class="fas fa-check text-success"></i> Set competitive pricing</li>
-                        <li><i class="fas fa-check text-success"></i> Write detailed descriptions</li>
-                        <li><i class="fas fa-check text-success"></i> Update status regularly</li>
-                    </ul>
-                </div>
-            </div>
+            }
         </div>
     </div>
 </div>

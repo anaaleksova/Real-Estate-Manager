@@ -1,0 +1,80 @@
+﻿@{
+    ViewData["Title"] = "Manage Properties";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var agent = ViewBag.Agent as RealEstate.Domain.DomainModels.Agent;
+    var assignedProperties = ViewBag.AssignedProperties as List<RealEstate.Domain.DomainModels.Property>;
+}
+
+<h1>Manage Properties</h1>
+
+<h4>Agent: @agent?.Name</h4>
+<hr />
+
+<div class="row">
+    <div class="col-md-6">
+        <h5>Assign New Property</h5>
+        <form asp-action="AssignProperty" method="post">
+            <input type="hidden" name="agentId" value="@agent?.Id" />
+            <div class="form-group">
+                <label class="control-label">Select Property</label>
+                <select name="propertyId" class="form-control" asp-items="ViewBag.AllProperties">
+                    <option value="">Choose a property...</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Assign Property" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<hr />
+
+<div class="row">
+    <div class="col-md-12">
+        <h5>Currently Assigned Properties</h5>
+        @if (assignedProperties != null && assignedProperties.Any())
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Address</th>
+                        <th>Price</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var property in assignedProperties)
+                    {
+                        <tr>
+                            <td>@property.Title</td>
+                            <td>@property.Address</td>
+                            <td>$@property.Price.ToString("N0")</td>
+                            <td>@property.Status</td>
+                            <td>
+                                <a asp-controller="Properties" asp-action="Details" asp-route-id="@property.Id" class="btn btn-sm btn-info">View</a>
+                                <form asp-action="RemoveProperty" method="post" style="display: inline;">
+                                    <input type="hidden" name="agentId" value="@agent?.Id" />
+                                    <input type="hidden" name="propertyId" value="@property.Id" />
+                                    <input type="submit" value="Remove" class="btn btn-sm btn-danger"
+                                           onclick="return confirm('Remove this property from agent?')" />
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p class="text-muted">No properties currently assigned to this agent.</p>
+        }
+    </div>
+</div>
+
+<div>
+    <a asp-action="Details" asp-route-id="@agent?.Id">Back to Agent Details</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using RealEstate.Domain;
 using RealEstate.Domain.Identity;
 using RealEstate.Repository;
 using RealEstate.Service.Implementation;
@@ -7,7 +8,6 @@ using RealEstate.Service.Interface;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
-    .AddRoles<IdentityRole>() 
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
 // Add services to the container.
@@ -15,6 +15,9 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
+builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
+
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
@@ -55,15 +58,5 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();
 
-using (var scope = app.Services.CreateScope())
-{
-    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-
-    if (!await roleManager.RoleExistsAsync("Agent"))
-        await roleManager.CreateAsync(new IdentityRole("Agent"));
-
-    if (!await roleManager.RoleExistsAsync("Client"))
-        await roleManager.CreateAsync(new IdentityRole("Client"));
-}
 
 app.Run();

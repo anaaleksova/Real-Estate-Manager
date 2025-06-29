@@ -62,9 +62,7 @@ namespace RealEstate.Service.Implementation
             return _appointmentRepository.GetAll(
                 selector: a => a,
                 predicate: a => a.ClientId == userId,
-                include: x => x.Include(a => a.Property)
-                              .Include(a => a.Agent)
-                              .ThenInclude(agent => agent.ApplicationUser)).ToList();
+                include: x => x.Include(a => a.Property)).ToList();
         }
     }
 }

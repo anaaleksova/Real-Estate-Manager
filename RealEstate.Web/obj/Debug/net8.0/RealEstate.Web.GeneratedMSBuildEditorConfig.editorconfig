@@ -56,36 +56,52 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Administrator/Desktop/RealEstateManager/RealEstate.Web/Views/Agent/Create.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWdlbnRcQ3JlYXRlLmNzaHRtbA==
+[C:/Users/Administrator/Desktop/RealEstateManager/RealEstate.Web/Views/Agents/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWdlbnRzXENyZWF0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Administrator/Desktop/RealEstateManager/RealEstate.Web/Views/Agent/MyAppointments.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWdlbnRcTXlBcHBvaW50bWVudHMuY3NodG1s
+[C:/Users/Administrator/Desktop/RealEstateManager/RealEstate.Web/Views/Agents/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWdlbnRzXERlbGV0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Administrator/Desktop/RealEstateManager/RealEstate.Web/Views/Agent/MyProperties.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWdlbnRcTXlQcm9wZXJ0aWVzLmNzaHRtbA==
+[C:/Users/Administrator/Desktop/RealEstateManager/RealEstate.Web/Views/Agents/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWdlbnRzXERldGFpbHMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Administrator/Desktop/RealEstateManager/RealEstate.Web/Views/Client/CreateAppointment.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2xpZW50XENyZWF0ZUFwcG9pbnRtZW50LmNzaHRtbA==
+[C:/Users/Administrator/Desktop/RealEstateManager/RealEstate.Web/Views/Agents/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWdlbnRzXEVkaXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Administrator/Desktop/RealEstateManager/RealEstate.Web/Views/Client/Favorites.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2xpZW50XEZhdm9yaXRlcy5jc2h0bWw=
+[C:/Users/Administrator/Desktop/RealEstateManager/RealEstate.Web/Views/Agents/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWdlbnRzXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Administrator/Desktop/RealEstateManager/RealEstate.Web/Views/Client/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2xpZW50XEluZGV4LmNzaHRtbA==
+[C:/Users/Administrator/Desktop/RealEstateManager/RealEstate.Web/Views/Agents/ManageProperties.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWdlbnRzXE1hbmFnZVByb3BlcnRpZXMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Administrator/Desktop/RealEstateManager/RealEstate.Web/Views/Client/MyAppointments.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2xpZW50XE15QXBwb2ludG1lbnRzLmNzaHRtbA==
+[C:/Users/Administrator/Desktop/RealEstateManager/RealEstate.Web/Views/Appointments/Schedule.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXBwb2ludG1lbnRzXFNjaGVkdWxlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Administrator/Desktop/RealEstateManager/RealEstate.Web/Views/Client/PropertyDetails.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2xpZW50XFByb3BlcnR5RGV0YWlscy5jc2h0bWw=
+[C:/Users/Administrator/Desktop/RealEstateManager/RealEstate.Web/Views/Clients/CreateAppointment.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2xpZW50c1xDcmVhdGVBcHBvaW50bWVudC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Administrator/Desktop/RealEstateManager/RealEstate.Web/Views/Clients/Favorites.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2xpZW50c1xGYXZvcml0ZXMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Administrator/Desktop/RealEstateManager/RealEstate.Web/Views/Clients/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2xpZW50c1xJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Administrator/Desktop/RealEstateManager/RealEstate.Web/Views/Clients/MyAppointments.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2xpZW50c1xNeUFwcG9pbnRtZW50cy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Administrator/Desktop/RealEstateManager/RealEstate.Web/Views/Clients/PropertyDetails.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2xpZW50c1xQcm9wZXJ0eURldGFpbHMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/Administrator/Desktop/RealEstateManager/RealEstate.Web/Views/Home/Index.cshtml]
@@ -94,6 +110,26 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/Administrator/Desktop/RealEstateManager/RealEstate.Web/Views/Home/Privacy.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Administrator/Desktop/RealEstateManager/RealEstate.Web/Views/Properties/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvcGVydGllc1xDcmVhdGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Administrator/Desktop/RealEstateManager/RealEstate.Web/Views/Properties/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvcGVydGllc1xEZWxldGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Administrator/Desktop/RealEstateManager/RealEstate.Web/Views/Properties/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvcGVydGllc1xEZXRhaWxzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Administrator/Desktop/RealEstateManager/RealEstate.Web/Views/Properties/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvcGVydGllc1xFZGl0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Administrator/Desktop/RealEstateManager/RealEstate.Web/Views/Properties/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvcGVydGllc1xJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/Administrator/Desktop/RealEstateManager/RealEstate.Web/Views/Shared/Error.cshtml]

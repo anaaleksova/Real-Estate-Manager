@@ -14,38 +14,52 @@ namespace RealEstate.Service.Implementation
     {
         private readonly IRepository<Agent> _agentRepository;
         private readonly IRepository<AgentProperty> _agentPropertyRepository;
-        private readonly IRepository<Appointment> _appointmentRepository;
+        private readonly IRepository<Property> _propertyRepository;
 
         public AgentService(
             IRepository<Agent> agentRepository,
             IRepository<AgentProperty> agentPropertyRepository,
-            IRepository<Appointment> appointmentRepository)
+            IRepository<Property> propertyRepository)
         {
             _agentRepository = agentRepository;
             _agentPropertyRepository = agentPropertyRepository;
-            _appointmentRepository = appointmentRepository;
+            _propertyRepository = propertyRepository;
         }
 
-        public Agent GetAgentByUserId(string userId)
+        public List<Agent> GetAll()
+        {
+            return _agentRepository.GetAll(selector: a => a).ToList();
+        }
+
+        public Agent GetById(Guid id)
         {
             return _agentRepository.Get(
                 selector: a => a,
-                predicate: a => a.ApplicationUserId == userId,
-                include: x => x.Include(a => a.ApplicationUser));
+                predicate: a => a.Id == id);
         }
 
-        public Agent CreateAgentProfile(string userId)
+        public Agent Add(Agent agent)
         {
-            var existingAgent = GetAgentByUserId(userId);
-            if (existingAgent != null) return existingAgent;
-
-            var agent = new Agent
-            {
-                Id = Guid.NewGuid(),
-                ApplicationUserId = userId
-            };
-
+            agent.Id = Guid.NewGuid();
             return _agentRepository.Insert(agent);
+        }
+
+        public Agent Update(Agent agent)
+        {
+            return _agentRepository.Update(agent);
+        }
+
+        public Agent DeleteById(Guid id)
+        {
+            var agent = _agentRepository.Get(
+                selector: a => a,
+                predicate: a => a.Id == id);
+
+            if (agent != null)
+            {
+                return _agentRepository.Delete(agent);
+            }
+            return null;
         }
 
         public List<Agent> GetAgentsForProperty(Guid propertyId)
@@ -53,21 +67,15 @@ namespace RealEstate.Service.Implementation
             return _agentPropertyRepository.GetAll(
                 selector: ap => ap.Agent,
                 predicate: ap => ap.PropertyId == propertyId,
-                include: x => x.Include(ap => ap.Agent)
-                              .ThenInclude(a => a.ApplicationUser)).ToList();
+                include: x => x.Include(ap => ap.Agent)).ToList();
         }
 
-        public List<Appointment> GetAgentAppointments(string userId)
+        public List<Property> GetPropertiesForAgent(Guid agentId)
         {
-            var agent = GetAgentByUserId(userId);
-            if (agent == null) return new List<Appointment>();
-
-            return _appointmentRepository.GetAll(
-                selector: a => a,
-                predicate: a => a.AgentId == agent.Id,
-                include: x => x.Include(a => a.Property)
-                              .Include(a => a.Client)
-                              .ThenInclude(c => c.ApplicationUser)).ToList();
+            return _agentPropertyRepository.GetAll(
+                selector: ap => ap.Property,
+                predicate: ap => ap.AgentId == agentId,
+                include: x => x.Include(ap => ap.Property)).ToList();
         }
 
         public void AssignAgentToProperty(Guid agentId, Guid propertyId)
@@ -98,6 +106,11 @@ namespace RealEstate.Service.Implementation
             {
                 _agentPropertyRepository.Delete(agentProperty);
             }
+        }
+
+        public List<Appointment> GetAgentAppointments(string userId)
+        {
+            throw new NotImplementedException();
         }
     }
 }

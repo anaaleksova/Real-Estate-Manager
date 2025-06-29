@@ -8,6 +8,6 @@ namespace RealEstate.Service.Interface
 {
     public interface IExternalPropertyService
     {
-        Task ImportExternalProperties(string agentId);
+        Task ImportExternalProperties(Guid agentId);
     }
 }

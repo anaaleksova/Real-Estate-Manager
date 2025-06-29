@@ -161,14 +161,19 @@ namespace RealEstate.Repository.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("ApplicationUserId")
+                    b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ApplicationUserId")
-                        .IsUnique();
 
                     b.ToTable("Agents");
                 });
@@ -243,8 +248,7 @@ namespace RealEstate.Repository.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ApplicationUserId")
-                        .IsUnique();
+                    b.HasIndex("ApplicationUserId");
 
                     b.ToTable("Clients");
                 });
@@ -279,11 +283,7 @@ namespace RealEstate.Repository.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("AgentId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("AgentId1")
+                    b.Property<Guid?>("AgentId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Description")
@@ -303,7 +303,7 @@ namespace RealEstate.Repository.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AgentId1");
+                    b.HasIndex("AgentId");
 
                     b.ToTable("Properties");
                 });
@@ -474,17 +474,6 @@ namespace RealEstate.Repository.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("RealEstate.Domain.DomainModels.Agent", b =>
-                {
-                    b.HasOne("RealEstate.Domain.Identity.ApplicationUser", "ApplicationUser")
-                        .WithOne("AgentProfile")
-                        .HasForeignKey("RealEstate.Domain.DomainModels.Agent", "ApplicationUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ApplicationUser");
-                });
-
             modelBuilder.Entity("RealEstate.Domain.DomainModels.AgentProperty", b =>
                 {
                     b.HasOne("RealEstate.Domain.DomainModels.Agent", "Agent")
@@ -534,8 +523,8 @@ namespace RealEstate.Repository.Migrations
             modelBuilder.Entity("RealEstate.Domain.DomainModels.Client", b =>
                 {
                     b.HasOne("RealEstate.Domain.Identity.ApplicationUser", "ApplicationUser")
-                        .WithOne("ClientProfile")
-                        .HasForeignKey("RealEstate.Domain.DomainModels.Client", "ApplicationUserId")
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -555,13 +544,9 @@ namespace RealEstate.Repository.Migrations
 
             modelBuilder.Entity("RealEstate.Domain.DomainModels.Property", b =>
                 {
-                    b.HasOne("RealEstate.Domain.DomainModels.Agent", "Agent")
+                    b.HasOne("RealEstate.Domain.DomainModels.Agent", null)
                         .WithMany("Properties")
-                        .HasForeignKey("AgentId1")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Agent");
+                        .HasForeignKey("AgentId");
                 });
 
             modelBuilder.Entity("RealEstate.Domain.DomainModels.PropertyInFavorite", b =>
@@ -611,13 +596,6 @@ namespace RealEstate.Repository.Migrations
                     b.Navigation("Appointments");
 
                     b.Navigation("PropertiesInFavourite");
-                });
-
-            modelBuilder.Entity("RealEstate.Domain.Identity.ApplicationUser", b =>
-                {
-                    b.Navigation("AgentProfile");
-
-                    b.Navigation("ClientProfile");
                 });
 #pragma warning restore 612, 618
         }

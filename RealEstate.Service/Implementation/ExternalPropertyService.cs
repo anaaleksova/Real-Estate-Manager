@@ -14,17 +14,21 @@ namespace RealEstate.Service.Implementation
     public class ExternalPropertyService : IExternalPropertyService
     {
         private readonly IRepository<Property> _propertyRepository;
+        private readonly IRepository<AgentProperty> _agentPropertyRepository;
         private readonly HttpClient _httpClient;
 
-        public ExternalPropertyService(IRepository<Property> propertyRepository)
+        public ExternalPropertyService(
+            IRepository<Property> propertyRepository,
+            IRepository<AgentProperty> agentPropertyRepository)
         {
             _propertyRepository = propertyRepository;
-            _httpClient = new HttpClient(); // Can be injected via DI
+            _agentPropertyRepository = agentPropertyRepository;
+            _httpClient = new HttpClient();
         }
 
-        public async Task ImportExternalProperties(string agentId)
+        public async Task ImportExternalProperties(Guid agentId)
         {
-            var response = await _httpClient.GetAsync("https://api.example.com/properties"); // Replace with real API
+            var response = await _httpClient.GetAsync("https://api.example.com/properties");
             if (!response.IsSuccessStatusCode)
             {
                 throw new Exception("Failed to fetch properties from external API.");
@@ -42,11 +46,19 @@ namespace RealEstate.Service.Implementation
                     Address = item.Location,
                     Description = item.Summary,
                     Price = item.Price,
-                    Status = "Available",
-                    AgentId = agentId
+                    Status = "Available"
                 };
 
-                _propertyRepository.Insert(property);
+                var createdProperty = _propertyRepository.Insert(property);
+
+                // Create AgentProperty relationship
+                var agentProperty = new AgentProperty
+                {
+                    Id = Guid.NewGuid(),
+                    AgentId = agentId,
+                    PropertyId = createdProperty.Id
+                };
+                _agentPropertyRepository.Insert(agentProperty);
             }
         }
     }

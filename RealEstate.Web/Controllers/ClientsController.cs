@@ -5,11 +5,12 @@ using Microsoft.AspNetCore.Mvc;
 using RealEstate.Domain.DomainModels;
 using RealEstate.Service.Interface;
 using System.Security.Claims;
+using RealEstate.Service.Implementation;
 
 namespace RealEstate.Web.Controllers
 {
-    [Authorize(Roles = "Client")]
-    public class ClientController : Controller
+    [Authorize]
+    public class ClientsController : Controller
     {
         private readonly IPropertyService _propertyService;
         private readonly IClientService _clientService;
@@ -17,7 +18,7 @@ namespace RealEstate.Web.Controllers
         private readonly IAppointmentService _appointmentService;
         private readonly IAgentService _agentService;
 
-        public ClientController(
+        public ClientsController(
             IPropertyService propertyService,
             IClientService clientService,
             IFavoriteService favoriteService,
@@ -42,7 +43,10 @@ namespace RealEstate.Web.Controllers
             var property = _propertyService.GetById(id);
             if (property == null) return NotFound();
 
-            ViewBag.Agents = _agentService.GetAgentsForProperty(id);
+            // Get agents assigned to this property
+            var agents = _agentService.GetAgentsForProperty(id);
+            ViewBag.Agents = agents;
+
             return View(property);
         }
 
@@ -71,13 +75,16 @@ namespace RealEstate.Web.Controllers
             return RedirectToAction("Favorites");
         }
 
+       
+
         public IActionResult CreateAppointment(Guid propertyId)
         {
             var property = _propertyService.GetById(propertyId);
             if (property == null) return NotFound();
 
+            // Get agents assigned to this property
             var agents = _agentService.GetAgentsForProperty(propertyId);
-            ViewBag.Agents = new SelectList(agents, "Id", "ApplicationUser.FullName");
+            ViewBag.Agents = agents;
             ViewBag.Property = property;
 
             return View(new Appointment { PropertyId = propertyId });
@@ -101,9 +108,10 @@ namespace RealEstate.Web.Controllers
                 return RedirectToAction("MyAppointments");
             }
 
+            // If model is invalid, reload the data
             var property = _propertyService.GetById(appointment.PropertyId);
             var agents = _agentService.GetAgentsForProperty(appointment.PropertyId);
-            ViewBag.Agents = new SelectList(agents, "Id", "ApplicationUser.FullName");
+            ViewBag.Agents = agents;
             ViewBag.Property = property;
 
             return View(appointment);
