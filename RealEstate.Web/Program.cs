@@ -26,7 +26,6 @@ builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddTransient<IPropertyService, PropertyService>();
 builder.Services.AddTransient<IAppointmentService, AppointmentService>();
 builder.Services.AddTransient<IFavoriteService, FavoriteService>();
-builder.Services.AddTransient<IClientService, ClientService>();
 builder.Services.AddTransient<IAgentService, AgentService>();
 builder.Services.AddTransient<IExternalPropertyService, ExternalPropertyService>();
 builder.Services.AddTransient<IEmailService, EmailService>();

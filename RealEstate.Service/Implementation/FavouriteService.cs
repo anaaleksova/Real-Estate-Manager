@@ -27,12 +27,10 @@ namespace RealEstate.Service.Implementation
         public Favorite GetFavoriteForUser(string userId)
         {
             return _favoriteRepository.Get(
-                selector: f => f,
-                predicate: f => f.ClientId == userId,
-                include: x =>
-                {
-                    return x.Include(y => y.PropertiesInFavourite).ThenInclude(z => z.Property);
-                });
+               selector: f => f,
+               predicate: f => f.ClientId == userId, 
+               include: x => x.Include(y => y.PropertiesInFavourite)
+                             .ThenInclude(z => z.Property));
         }
 
 
@@ -70,10 +68,14 @@ namespace RealEstate.Service.Implementation
         public void RemoveFromFavorites(Guid propertyId, string userId)
         {
 
-            var favorite = _favoriteRepository.Get(selector: x => x,
-                predicate: x => x.ClientId == userId);
+            var favorite = _favoriteRepository.Get(
+                 selector: x => x,
+                 predicate: x => x.ClientId == userId);
 
-            var relation = _pifRepository.Get(selector: x => x,
+            if (favorite == null) return;
+
+            var relation = _pifRepository.Get(
+                selector: x => x,
                 predicate: p => p.FavoriteId == favorite.Id && p.PropertyId == propertyId);
 
             if (relation != null)

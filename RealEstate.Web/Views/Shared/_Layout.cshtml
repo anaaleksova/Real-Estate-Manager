@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/RealEstate.Web.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
 </head>
 <body>
     <header>
@@ -22,44 +23,66 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
 
-                        <!-- Properties Section -->
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle text-dark" href="#" role="button" data-bs-toggle="dropdown">
-                                Properties
+                                <i class="fas fa-home"></i> Properties
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" asp-controller="Properties" asp-action="Index">All Properties</a></li>
-                                <li><a class="dropdown-item" asp-controller="Properties" asp-action="Create">Add Property</a></li>
+                                <li>
+                                    <a class="dropdown-item" asp-controller="Properties" asp-action="Index">
+                                        <i class="fas fa-list"></i> All Properties
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" asp-controller="Properties" asp-action="Create">
+                                        <i class="fas fa-plus"></i> Add Property
+                                    </a>
+                                </li>
                             </ul>
                         </li>
 
-                        <!-- Agents Section -->
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle text-dark" href="#" role="button" data-bs-toggle="dropdown">
-                                Agents
+                                <i class="fas fa-user-tie"></i> Agents
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" asp-controller="Agents" asp-action="Index">All Agents</a></li>
-                                <li><a class="dropdown-item" asp-controller="Agents" asp-action="Create">Add Agent</a></li>
+                                <li>
+                                    <a class="dropdown-item" asp-controller="Agents" asp-action="Index">
+                                        <i class="fas fa-list"></i> All Agents
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" asp-controller="Agents" asp-action="Create">
+                                        <i class="fas fa-plus"></i> Add Agent
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-dark" href="#" role="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-calendar"></i> Appointments
+                            </a>
+                            <ul class="dropdown-menu">
+                                @if (User.Identity.IsAuthenticated)
+                                {
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="Appointments" asp-action="MyAppointments">
+                                            <i class="fas fa-calendar-check"></i> My Appointments
+                                        </a>
+                                    </li>
+                                    <li><hr class="dropdown-divider"></li>
+                                }
                             </ul>
                         </li>
 
                         @if (User.Identity.IsAuthenticated)
                         {
-                            <!-- Client Features -->
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle text-dark" href="#" role="button" data-bs-toggle="dropdown">
-                                    Client
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Favorites" asp-action="Index">
+                                    <i class="fas fa-heart text-danger"></i> My Favorites
                                 </a>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" asp-controller="Client" asp-action="Properties">Browse Properties</a></li>
-                                    <li><a class="dropdown-item" asp-controller="Client" asp-action="Favorites">My Favorites</a></li>
-                                    <li><a class="dropdown-item" asp-controller="Client" asp-action="MyAppointments">My Appointments</a></li>
-                                </ul>
                             </li>
                         }
                     </ul>

@@ -1,92 +1,142 @@
-﻿@model RealEstate.Domain.DomainModels.Appointment
-@{
-    ViewData["Title"] = "Schedule Appointment";
+﻿@{
+    ViewData["Title"] = "Book Appointment";
     var property = ViewBag.Property as RealEstate.Domain.DomainModels.Property;
     var agents = ViewBag.Agents as List<RealEstate.Domain.DomainModels.Agent>;
+    var propertyId = ViewBag.PropertyId;
 }
 
 <div class="container">
-    <h2>Schedule Appointment</h2>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Book Appointment</h2>
+        <a href="@Url.Action("Details", "Properties", new { id = propertyId })" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back to Property
+        </a>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
 
     <div class="row">
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">
-                    <h5>Appointment for: @property?.Title</h5>
+                    <h5><i class="fas fa-calendar-plus"></i> New Appointment for: @property?.Title</h5>
                 </div>
                 <div class="card-body">
-                    <form method="post">
-                        <input type="hidden" asp-for="PropertyId" />
+                    @if (agents != null && agents.Any())
+                    {
+                        <form method="post">
+                            <input type="hidden" name="PropertyId" value="@propertyId" />
 
-                        <div class="mb-3">
-                            <label asp-for="AgentId" class="form-label">Select Agent</label>
-                            <select asp-for="AgentId" class="form-select">
-                                <option value="">Choose an agent...</option>
-                                @if (agents != null)
-                                {
+                            <div class="mb-3">
+                                <label for="AgentId" class="form-label">
+                                    <i class="fas fa-user-tie"></i> Select Agent <span class="text-danger">*</span>
+                                </label>
+                                <select name="AgentId" id="AgentId" class="form-select" required>
+                                    <option value="">Choose an agent...</option>
                                     @foreach (var agent in agents)
                                     {
-                                        <option value="@agent.Id">@agent.Name</option>
+                                        <option value="@agent.Id">@agent.Name - @agent.Email</option>
                                     }
-                                }
-                            </select>
-                            <span asp-validation-for="AgentId" class="text-danger"></span>
-                            <small class="form-text text-muted">Select from agents assigned to this property</small>
-                        </div>
+                                </select>
+                                <small class="form-text text-muted">Select from agents assigned to this property</small>
+                            </div>
 
-                        <div class="mb-3">
-                            <label asp-for="ScheduledDate" class="form-label">Preferred Date & Time</label>
-                            <input asp-for="ScheduledDate" type="datetime-local" class="form-control" />
-                            <span asp-validation-for="ScheduledDate" class="text-danger"></span>
-                        </div>
+                            <div class="mb-3">
+                                <label for="ScheduledDate" class="form-label">
+                                    <i class="fas fa-calendar-alt"></i> Preferred Date & Time <span class="text-danger">*</span>
+                                </label>
+                                <input name="ScheduledDate" id="ScheduledDate" type="datetime-local" class="form-control" required />
+                                <small class="form-text text-muted">Please select a future date and time during business hours</small>
+                            </div>
 
-                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                            <a href="@Url.Action("PropertyDetails", "Client", new { id = Model.PropertyId })"
-                               class="btn btn-secondary">Cancel</a>
-                            <button type="submit" class="btn btn-primary">Schedule Appointment</button>
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                <a href="@Url.Action("Details", "Properties", new { id = propertyId })"
+                                   class="btn btn-secondary">
+                                    <i class="fas fa-times"></i> Cancel
+                                </a>
+                                <button type="submit" class="btn btn-success">
+                                    <i class="fas fa-calendar-check"></i> Book Appointment
+                                </button>
+                            </div>
+                        </form>
+                    }
+                    else
+                    {
+                        <div class="alert alert-warning text-center">
+                            <h5><i class="fas fa-exclamation-triangle"></i> No Agents Available</h5>
+                            <p>Unfortunately, there are no agents currently assigned to this property.</p>
+                            <p>Please contact the property management office directly or try again later.</p>
+                            <a href="@Url.Action("Details", "Properties", new { id = propertyId })" class="btn btn-primary">
+                                <i class="fas fa-arrow-left"></i> Back to Property
+                            </a>
                         </div>
-                    </form>
+                    }
                 </div>
             </div>
         </div>
 
         <div class="col-md-4">
-            <div class="card">
+            <div class="card mb-3">
                 <div class="card-header">
-                    <h6>Property Summary</h6>
+                    <h6><i class="fas fa-home"></i> Property Summary</h6>
                 </div>
                 <div class="card-body">
-                    <p><strong>@property?.Title</strong></p>
-                    <p>@property?.Address</p>
-                    <p><strong>Price:</strong> $@property?.Price.ToString("N0")</p>
+                    <h6><strong>@property?.Title</strong></h6>
+                    <p class="mb-1"><i class="fas fa-map-marker-alt"></i> @property?.Address</p>
+                    <p class="mb-1"><strong>Price:</strong> $@property?.Price.ToString("N0")</p>
+                    <p class="mb-0">
+                        <strong>Status:</strong>
+                        <span class="badge bg-@(property?.Status == "Available" ? "success" :
+                                                property?.Status == "Pending" ? "warning" :
+                                                property?.Status == "Sold" ? "danger" : "secondary")">
+                            @property?.Status
+                        </span>
+                    </p>
                 </div>
             </div>
 
             @if (agents != null && agents.Any())
             {
-                <div class="card mt-3">
+                <div class="card">
                     <div class="card-header">
-                        <h6>Available Agents</h6>
+                        <h6><i class="fas fa-users"></i> Available Agents (@agents.Count)</h6>
                     </div>
                     <div class="card-body">
                         @foreach (var agent in agents)
                         {
-                            <div class="mb-3 p-2 border rounded">
-                                <strong>@agent.Name</strong><br>
+                            <div class="mb-3 p-3 border rounded">
+                                <div class="d-flex align-items-center mb-2">
+                                    <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center"
+                                         style="width: 40px; height: 40px; font-size: 18px;">
+                                        @agent.Name.First()
+                                    </div>
+                                    <div class="ms-3">
+                                        <strong>@agent.Name</strong>
+                                    </div>
+                                </div>
                                 <small class="text-muted">
-                                    Email: @agent.Email<br>
-                                    Phone: @agent.Phone
+                                    <i class="fas fa-envelope"></i> @agent.Email<br>
+                                    @if (!string.IsNullOrEmpty(agent.Phone))
+                                    {
+                                        <i class="fas fa-phone"></i> @agent.Phone
+                                    }
                                 </small>
                             </div>
                         }
-                    </div>
-                </div>
-            }
-            else
-            {
-                <div class="card mt-3">
-                    <div class="card-body text-center">
-                        <p class="text-muted">No agents assigned to this property yet.</p>
                     </div>
                 </div>
             }
@@ -94,8 +144,28 @@
     </div>
 </div>
 
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-}
+<script>
+    // Set minimum date to today and default to tomorrow 10 AM
+    document.addEventListener('DOMContentLoaded', function() {
+        var dateInput = document.getElementById('ScheduledDate');
+        if (dateInput) {
+            var now = new Date();
+            var year = now.getFullYear();
+            var month = (now.getMonth() + 1).toString().padStart(2, '0');
+            var day = now.getDate().toString().padStart(2, '0');
+
+            // Set minimum date to today
+            var minDateTime = year + '-' + month + '-' + day + 'T09:00';
+            dateInput.min = minDateTime;
+
+            // Set default to tomorrow 10 AM
+            var tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            var tomorrowYear = tomorrow.getFullYear();
+            var tomorrowMonth = (tomorrow.getMonth() + 1).toString().padStart(2, '0');
+            var tomorrowDay = tomorrow.getDate().toString().padStart(2, '0');
+
+            dateInput.value = tomorrowYear + '-' + tomorrowMonth + '-' + tomorrowDay + 'T10:00';
+        }
+    });
+</script>

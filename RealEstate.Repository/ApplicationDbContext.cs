@@ -17,7 +17,6 @@ namespace RealEstate.Repository
         public virtual DbSet<PropertyInFavorite> PropertyInFavorites { get; set; }
         public virtual DbSet<Favorite> Favorites { get; set; }
         public virtual DbSet<EmailMessage> EmailMessages { get; set; }
-        public virtual DbSet<Client> Clients { get; set; }
         public virtual DbSet<Agent> Agents { get; set; }
         public virtual DbSet<AgentProperty> AgentProperties { get; set; }
 

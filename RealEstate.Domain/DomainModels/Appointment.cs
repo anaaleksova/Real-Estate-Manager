@@ -15,13 +15,13 @@ namespace RealEstate.Domain.DomainModels
 
         public string ClientId { get; set; }
 
-        public Client Client { get; set; }
+        public ApplicationUser Client { get; set; }
 
         public Guid AgentId { get; set; }
         public Agent Agent { get; set; }
 
         public DateTime ScheduledDate { get; set; }
-        public string Status { get; set; }
+        public string Status { get; set; } = "Scheduled";
     }
 
 

@@ -1,0 +1,154 @@
+﻿@model List<RealEstate.Domain.DomainModels.Appointment>
+@{
+    ViewData["Title"] = "My Appointments";
+}
+
+<div class="container">
+    <h2>My Appointments</h2>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (Model.Any())
+    {
+        <div class="row">
+            @foreach (var appointment in Model.OrderBy(a => a.ScheduledDate))
+            {
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h6 class="mb-0">@appointment.Property?.Title</h6>
+                            <span class="badge bg-@(appointment.Status == "Scheduled" ? "primary" :
+                                                  appointment.Status == "Completed" ? "success" :
+                                                  appointment.Status == "Cancelled" ? "danger" : "secondary")">
+                                @appointment.Status
+                            </span>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">
+                                <strong><i class="fas fa-calendar"></i> Date & Time:</strong><br>
+                                @appointment.ScheduledDate.ToString("dddd, dd MMMM yyyy")<br>
+                                <span class="text-primary">@appointment.ScheduledDate.ToString("HH:mm")</span>
+                            </p>
+
+                            <p class="card-text">
+                                <strong><i class="fas fa-map-marker-alt"></i> Property:</strong><br>
+                                @appointment.Property?.Address
+                            </p>
+
+                            <p class="card-text">
+                                <strong><i class="fas fa-user-tie"></i> Agent:</strong><br>
+                                @appointment.Agent?.Name
+                            </p>
+
+                            @if (appointment.Property?.Price != null)
+                            {
+                                <p class="card-text">
+                                    <strong><i class="fas fa-dollar-sign"></i> Price:</strong><br>
+                                    $@appointment.Property.Price.ToString("N0")
+                                </p>
+                            }
+
+                            @if (appointment.ScheduledDate > DateTime.Now && appointment.Status == "Scheduled")
+                            {
+                                <div class="alert alert-info alert-sm mb-0">
+                                    <small><i class="fas fa-clock"></i> Upcoming appointment</small>
+                                </div>
+                            }
+                            else if (appointment.ScheduledDate < DateTime.Now && appointment.Status == "Scheduled")
+                            {
+                                <div class="alert alert-warning alert-sm mb-0">
+                                    <small><i class="fas fa-exclamation-triangle"></i> Past due</small>
+                                </div>
+                            }
+                        </div>
+                        <div class="card-footer">
+                            <div class="btn-group w-100 mb-2" role="group">
+                                <a href="@Url.Action("Details", "Properties", new { id = appointment.Property?.Id })"
+                                   class="btn btn-outline-primary btn-sm">
+                                    <i class="fas fa-eye"></i> View Property
+                                </a>
+                                <a href="@Url.Action("Details", "Appointments", new { id = appointment.Id })"
+                                   class="btn btn-outline-info btn-sm">
+                                    <i class="fas fa-info"></i> Details
+                                </a>
+                            </div>
+
+                            <div class="text-center">
+                                <small class="text-muted">
+                                    <strong>Agent Contact:</strong><br>
+                                    <i class="fas fa-envelope"></i> @appointment.Agent?.Email<br>
+                                    @if (!string.IsNullOrEmpty(appointment.Agent?.Phone))
+                                    {
+                                        <i class="fas fa-phone"></i> @appointment.Agent.Phone
+                                    }
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="mt-4">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="card bg-light text-center">
+                        <div class="card-body">
+                            <h5>Total Appointments</h5>
+                            <h2 class="text-primary">@Model.Count</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-light text-center">
+                        <div class="card-body">
+                            <h5>Upcoming</h5>
+                            <h2 class="text-success">
+                                @Model.Count(a => a.ScheduledDate > DateTime.Now && a.Status == "Scheduled")
+                            </h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-light text-center">
+                        <div class="card-body">
+                            <h5>Completed</h5>
+                            <h2 class="text-info">
+                                @Model.Count(a => a.Status == "Completed")
+                            </h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-light text-center">
+                        <div class="card-body">
+                            <h5>Cancelled</h5>
+                            <h2 class="text-danger">
+                                @Model.Count(a => a.Status == "Cancelled")
+                            </h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="text-center mt-5">
+            <div class="mb-4">
+                <i class="fas fa-calendar-times" style="font-size: 4rem; color: #dee2e6;"></i>
+            </div>
+            <h4>No appointments scheduled.</h4>
+            <p>Browse properties and schedule your first appointment!</p>
+            <a href="@Url.Action("Index", "Properties")" class="btn btn-primary">
+                <i class="fas fa-home"></i> Browse Properties
+            </a>
+        </div>
+    }
+</div>

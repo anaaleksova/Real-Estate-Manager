@@ -1,18 +1,18 @@
-﻿using System.Security.Claims;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RealEstate.Service.Interface;
+using System.Security.Claims;
 
 namespace RealEstate.Web.Controllers
 {
+    [Authorize]
     public class FavoritesController : Controller
     {
         private readonly IFavoriteService _favoriteService;
-        private readonly IClientService _clientService;
 
-        public FavoritesController(IFavoriteService favoriteService, IClientService clientService)
+        public FavoritesController(IFavoriteService favoriteService)
         {
             _favoriteService = favoriteService;
-            _clientService = clientService;
         }
 
         // GET: My Favorites
@@ -28,14 +28,10 @@ namespace RealEstate.Web.Controllers
         public IActionResult Add(Guid propertyId)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            // Ensure client profile exists
-            _clientService.CreateClientProfile(userId);
-
             _favoriteService.AddToFavorites(propertyId, userId);
             TempData["Success"] = "Property added to favorites!";
 
-            return RedirectToAction("Browse", "Properties");
+            return RedirectToAction("Index", "Properties");
         }
 
         // POST: Remove from Favorites

@@ -30,13 +30,11 @@ namespace RealEstate.Service.Implementation
                 Sender = new MailboxAddress("Real Estate App", _mailSettings.SmtpUserName)
             };
 
-            // Set From
+          
             emailMessage.From.Add(new MailboxAddress("Real Estate App", _mailSettings.SmtpUserName));
 
-            // Set To
             emailMessage.To.Add(new MailboxAddress(emailMessageInput.MailTo, emailMessageInput.MailTo));
 
-            // Plain text content
             emailMessage.Body = new TextPart(MimeKit.Text.TextFormat.Plain)
             {
                 Text = emailMessageInput.Content
@@ -61,7 +59,7 @@ namespace RealEstate.Service.Implementation
             }
             catch (SmtpException ex)
             {
-                throw; // optionally log or handle differently
+                throw; 
             }
         }
 

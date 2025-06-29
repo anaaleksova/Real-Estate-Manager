@@ -10,6 +10,7 @@ namespace RealEstate.Service.Interface
     public interface IAppointmentService
     {
         List<Appointment> GetAll();
+        List<Appointment> GetUserAppointments(string userId);
         Appointment GetById(Guid id);
         Appointment Add(Appointment appointment);
         Appointment Update(Appointment appointment);

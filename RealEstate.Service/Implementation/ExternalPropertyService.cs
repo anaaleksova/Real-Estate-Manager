@@ -51,7 +51,6 @@ namespace RealEstate.Service.Implementation
 
                 var createdProperty = _propertyRepository.Insert(property);
 
-                // Create AgentProperty relationship
                 var agentProperty = new AgentProperty
                 {
                     Id = Guid.NewGuid(),

@@ -29,7 +29,6 @@ namespace RealEstate.Service.Implementation
             appointment.Status = "Scheduled";
             var result = _appointmentRepository.Insert(appointment);
 
-            // Load related entities for email
             var fullAppointment = GetById(result.Id);
             if (fullAppointment != null)
             {
@@ -41,8 +40,9 @@ namespace RealEstate.Service.Implementation
 
         public Appointment DeleteById(Guid id)
         {
-            var appointment = _appointmentRepository.Get(selector: x => x,
-                                               predicate: x => x.Id == id);
+            var appointment = _appointmentRepository.Get(
+                selector: x => x,
+                predicate: x => x.Id == id);
             return _appointmentRepository.Delete(appointment);
         }
 
@@ -52,7 +52,17 @@ namespace RealEstate.Service.Implementation
                 selector: x => x,
                 include: x => x.Include(a => a.Property)
                               .Include(a => a.Client)
-                              .ThenInclude(c => c.ApplicationUser)).ToList();
+                              .Include(a => a.Agent)).ToList();
+        }
+
+        public List<Appointment> GetUserAppointments(string userId)
+        {
+            return _appointmentRepository.GetAll(
+                selector: a => a,
+                predicate: a => a.ClientId== userId,
+                include: x => x.Include(a => a.Property)
+                              .Include(a => a.Agent)
+                              .Include(a => a.Client)).ToList();
         }
 
         public Appointment GetById(Guid id)
@@ -62,7 +72,7 @@ namespace RealEstate.Service.Implementation
                 predicate: x => x.Id == id,
                 include: x => x.Include(a => a.Property)
                               .Include(a => a.Client)
-                              .ThenInclude(c => c.ApplicationUser));
+                              .Include(a => a.Agent));
         }
 
         public Appointment Update(Appointment appointment)
@@ -72,15 +82,14 @@ namespace RealEstate.Service.Implementation
 
         public void SendEmailReminder(Appointment appointment)
         {
-            if (appointment.Client?.ApplicationUser == null ||
-                appointment.Property == null)
+            if (appointment.Client == null || appointment.Property == null)
                 return;
 
             var clientEmail = new EmailMessage
             {
                 Subject = "Property Inspection Scheduled",
-                MailTo = appointment.Client.ApplicationUser.Email,
-                Content = $"Dear {appointment.Client.ApplicationUser.FullName},\n\n" +
+                MailTo = appointment.Client.Email,
+                Content = $"Dear {appointment.Client.FullName},\n\n" +
                           $"Your property inspection is scheduled on {appointment.ScheduledDate:dd MMM yyyy HH:mm} " +
                           $"for property '{appointment.Property.Title}' at {appointment.Property.Address}.\n" +
                           $"Agent: {appointment.Agent.Name}\n" +
@@ -90,19 +99,17 @@ namespace RealEstate.Service.Implementation
             _emailService.SendEmailAsync(clientEmail);
         }
 
-        public Appointment CreateAppointmentWithAgent(Guid propertyId, string clientId, Guid agentId, DateTime scheduledDate, string notes = "")
+        public Appointment CreateAppointmentWithAgent(Guid propertyId, string userId, Guid agentId, DateTime scheduledDate, string notes = "")
         {
             var appointment = new Appointment
             {
                 PropertyId = propertyId,
-                ClientId = clientId,
+                ClientId= userId,
                 AgentId = agentId,
                 ScheduledDate = scheduledDate,
-             
             };
 
             return Add(appointment);
         }
     }
-
 }
