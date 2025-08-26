@@ -1,0 +1,25 @@
+﻿@model RealEstate.Domain.DomainModels.Property
+@using Microsoft.Extensions.Options
+@using RealEstate.Domain
+@inject IOptions<StripeSettings> Stripe
+
+@{
+    ViewData["Title"] = "Buy Property";
+}
+
+<h2>Buy Property</h2>
+
+<div>
+    <h3>@Model.Title</h3>
+    <p><strong>Location:</strong> @Model.Address</p>
+    <p><strong>Price:</strong> @Model.Price $</p>
+    <p><strong>Description:</strong> @Model.Description</p>
+</div>
+
+<form asp-action="CreateCheckoutSession" asp-controller="Appointments" method="post">
+    <input type="hidden" name="propertyId" value="@Model.Id" />
+    <button type="submit" class="btn btn-primary">
+        Pay $@Model.Price
+    </button>
+</form>
+

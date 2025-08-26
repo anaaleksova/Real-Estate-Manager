@@ -5,13 +5,6 @@
 }
 
 <div class="container">
-    @if (TempData["Success"] != null)
-    {
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            @TempData["Success"]
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    }
 
     <div class="row">
         <div class="col-md-8">
@@ -60,78 +53,6 @@
                     }
                 </div>
             </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="card mb-3">
-                <div class="card-header">
-                    <h5>Admin Actions</h5>
-                </div>
-                <div class="card-body">
-                    <div class="d-grid gap-2">
-                        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">
-                            <i class="fas fa-edit"></i> Edit Property
-                        </a>
-                        <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">
-                            <i class="fas fa-trash"></i> Delete Property
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            @if (User.Identity.IsAuthenticated)
-            {
-                <div class="card mb-3">
-                    <div class="card-header">
-                        <h5>Actions</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="d-grid gap-2">
-                            <form method="post" action="@Url.Action("Add", "Favorites")">
-                                <input type="hidden" name="propertyId" value="@Model.Id" />
-                                <button type="submit" class="btn btn-outline-danger w-100">
-                                    <i class="fas fa-heart"></i> Add to Favorites
-                                </button>
-                            </form>
-
-                            @if (agents != null && agents.Any())
-                            {
-                                <a href="@Url.Action("Schedule", "Appointments", new { propertyId = Model.Id })"
-                                   class="btn btn-success">
-                                    <i class="fas fa-calendar"></i> Schedule Appointment
-                                </a>
-                            }
-                            else
-                            {
-                                <div class="alert alert-warning mb-0">
-                                    <small>No agents available for appointments at this time.</small>
-                                </div>
-                            }
-                        </div>
-                    </div>
-                </div>
-            }
-
-            @if (agents != null && agents.Any())
-            {
-                <div class="card">
-                    <div class="card-header">
-                        <h5>Available Agents</h5>
-                    </div>
-                    <div class="card-body">
-                        @foreach (var agent in agents)
-                        {
-                            <div class="mb-3 p-2 border rounded">
-                                <strong>@agent.Name</strong><br>
-                                <small class="text-muted">
-                                    Email: @agent.Email<br>
-                                    Phone: @agent.Phone
-                                </small>
-                            </div>
-                        }
-                    </div>
-                </div>
-            }
         </div>
     </div>
 

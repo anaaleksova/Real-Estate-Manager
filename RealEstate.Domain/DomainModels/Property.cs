@@ -14,7 +14,8 @@ namespace RealEstate.Domain.DomainModels
         public string Description { get; set; }
         public int Price { get; set; }
         public string Status { get; set; }
-
+        public string? BuyerId { get; set; }
+        public ApplicationUser? Buyer { get; set; }
         public ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
         public virtual ICollection<PropertyInFavorite> PropertiesInFavourite { get; set; } = new List<PropertyInFavorite>();
         public virtual ICollection<AgentProperty> AgentProperties { get; set; } = new List<AgentProperty>();

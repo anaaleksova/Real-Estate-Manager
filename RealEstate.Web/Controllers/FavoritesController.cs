@@ -29,7 +29,6 @@ namespace RealEstate.Web.Controllers
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             _favoriteService.AddToFavorites(propertyId, userId);
-            TempData["Success"] = "Property added to favorites!";
 
             return RedirectToAction("Index", "Properties");
         }
@@ -40,7 +39,6 @@ namespace RealEstate.Web.Controllers
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             _favoriteService.RemoveFromFavorites(propertyId, userId);
-            TempData["Success"] = "Property removed from favorites!";
             return RedirectToAction("Index");
         }
     }

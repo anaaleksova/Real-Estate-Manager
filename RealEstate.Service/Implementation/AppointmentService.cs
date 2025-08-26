@@ -40,9 +40,8 @@ namespace RealEstate.Service.Implementation
 
         public Appointment DeleteById(Guid id)
         {
-            var appointment = _appointmentRepository.Get(
-                selector: x => x,
-                predicate: x => x.Id == id);
+            var appointment = _appointmentRepository.Get(selector: x => x,
+                                                         predicate: x => x.Id == id);
             return _appointmentRepository.Delete(appointment);
         }
 
@@ -89,7 +88,7 @@ namespace RealEstate.Service.Implementation
             {
                 Subject = "Property Inspection Scheduled",
                 MailTo = appointment.Client.Email,
-                Content = $"Dear {appointment.Client.FullName},\n\n" +
+                Content = $"Dear {appointment.Client.FirstName},\n\n" +
                           $"Your property inspection is scheduled on {appointment.ScheduledDate:dd MMM yyyy HH:mm} " +
                           $"for property '{appointment.Property.Title}' at {appointment.Property.Address}.\n" +
                           $"Agent: {appointment.Agent.Name}\n" +
@@ -99,7 +98,7 @@ namespace RealEstate.Service.Implementation
             _emailService.SendEmailAsync(clientEmail);
         }
 
-        public Appointment CreateAppointmentWithAgent(Guid propertyId, string userId, Guid agentId, DateTime scheduledDate, string notes = "")
+        public Appointment CreateAppointmentWithAgent(Guid propertyId, string userId, Guid agentId, DateTime scheduledDate)
         {
             var appointment = new Appointment
             {
@@ -110,6 +109,14 @@ namespace RealEstate.Service.Implementation
             };
 
             return Add(appointment);
+        }
+
+        public Appointment Cancel(Guid id)
+        {
+            Appointment appointment = this.GetById(id);
+            appointment.Status = "Cancelled";
+            _appointmentRepository.Update(appointment);
+            return appointment;
         }
     }
 }

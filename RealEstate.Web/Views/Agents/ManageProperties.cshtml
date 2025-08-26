@@ -21,7 +21,7 @@
                     <option value="">Choose a property...</option>
                 </select>
             </div>
-            <div class="form-group">
+            <div class="form-group mt-3">
                 <input type="submit" value="Assign Property" class="btn btn-primary" />
             </div>
         </form>
@@ -75,6 +75,7 @@
 </div>
 
 <div>
-    <a asp-action="Details" asp-route-id="@agent?.Id">Back to Agent Details</a> |
-    <a asp-action="Index">Back to List</a>
+    <a class="btn btn-secondary" asp-action="Index">
+        <i class="fas fa-arrow-left"></i> Back to Agents
+    </a>
 </div>

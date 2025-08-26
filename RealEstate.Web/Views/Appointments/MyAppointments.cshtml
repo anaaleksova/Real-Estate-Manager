@@ -6,14 +6,6 @@
 <div class="container">
     <h2>My Appointments</h2>
 
-    @if (TempData["Success"] != null)
-    {
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            @TempData["Success"]
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    }
-
     @if (Model.Any())
     {
         <div class="row">
@@ -54,32 +46,53 @@
                                 </p>
                             }
 
-                            @if (appointment.ScheduledDate > DateTime.Now && appointment.Status == "Scheduled")
-                            {
-                                <div class="alert alert-info alert-sm mb-0">
-                                    <small><i class="fas fa-clock"></i> Upcoming appointment</small>
-                                </div>
-                            }
-                            else if (appointment.ScheduledDate < DateTime.Now && appointment.Status == "Scheduled")
-                            {
-                                <div class="alert alert-warning alert-sm mb-0">
-                                    <small><i class="fas fa-exclamation-triangle"></i> Past due</small>
-                                </div>
-                            }
                         </div>
                         <div class="card-footer">
                             <div class="btn-group w-100 mb-2" role="group">
-                                <a href="@Url.Action("Details", "Properties", new { id = appointment.Property?.Id })"
-                                   class="btn btn-outline-primary btn-sm">
-                                    <i class="fas fa-eye"></i> View Property
+                                <a href="@Url.Action("Details","Properties", new { id = appointment.Property?.Id })"
+                                class="btn btn-outline-primary btn-sm">
+                                    <i class="fas fa-eye"></i> Property
                                 </a>
-                                <a href="@Url.Action("Details", "Appointments", new { id = appointment.Id })"
-                                   class="btn btn-outline-info btn-sm">
-                                    <i class="fas fa-info"></i> Details
+                                @if (appointment.Property.Status != "Sold")
+                                {
+                                    <a href="@Url.Action("Delete", new { id = appointment.Id })
+                                    "
+                                    class="btn btn-danger btn-sm">
+                                    <i class="fas fa-trash"></i> Delete
                                 </a>
+                                }
                             </div>
 
-                            <div class="text-center">
+                            @if (appointment.ScheduledDate > DateTime.Now && appointment.Status != "Cancelled" && appointment.Status != "Completed")
+                            {
+                                <div class="btn-group w-100 mb-2" role="group">
+                                    <a href="@Url.Action("Edit", new { id = appointment.Id })"
+                                    class="btn btn-warning btn-sm">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </a>
+                                    <a href="@Url.Action("Cancel", new { id = appointment.Id })"
+                                    class="btn btn-dark  btn-sm">
+                                        <i class="fas fa-edit text-white"></i> Cancel
+                                    </a>
+                                </div>
+                            }
+                            @if (appointment.ScheduledDate < DateTime.Now && appointment.Status == "Completed" && appointment.Property.Status!="Sold")
+                            {
+                                <div class="btn-group w-100 mb-2" role="group">
+                                    <a href="@Url.Action("Buy", new { id = appointment.Property.Id })"
+                                    class="btn btn-success btn-sm">
+                                        <i class="fas fa-edit"></i> Buy
+                                    </a>
+                                </div>
+                            }
+                            @if (appointment.Property.Status == "Sold")
+                            {
+                                <div class="alert alert-info alert-sm mb-0 text-center">
+                                    <small><i class="fas fa-shopping-cart"></i> Bought</small>
+                                </div>
+
+                            }
+                            <div class="text-center mt-2">
                                 <small class="text-muted">
                                     <strong>Agent Contact:</strong><br>
                                     <i class="fas fa-envelope"></i> @appointment.Agent?.Email<br>
@@ -93,49 +106,6 @@
                     </div>
                 </div>
             }
-        </div>
-
-        <div class="mt-4">
-            <div class="row">
-                <div class="col-md-3">
-                    <div class="card bg-light text-center">
-                        <div class="card-body">
-                            <h5>Total Appointments</h5>
-                            <h2 class="text-primary">@Model.Count</h2>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card bg-light text-center">
-                        <div class="card-body">
-                            <h5>Upcoming</h5>
-                            <h2 class="text-success">
-                                @Model.Count(a => a.ScheduledDate > DateTime.Now && a.Status == "Scheduled")
-                            </h2>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card bg-light text-center">
-                        <div class="card-body">
-                            <h5>Completed</h5>
-                            <h2 class="text-info">
-                                @Model.Count(a => a.Status == "Completed")
-                            </h2>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card bg-light text-center">
-                        <div class="card-body">
-                            <h5>Cancelled</h5>
-                            <h2 class="text-danger">
-                                @Model.Count(a => a.Status == "Cancelled")
-                            </h2>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     }
     else

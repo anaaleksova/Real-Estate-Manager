@@ -15,6 +15,7 @@ namespace RealEstate.Service.Interface
         Appointment Add(Appointment appointment);
         Appointment Update(Appointment appointment);
         Appointment DeleteById(Guid id);
+        Appointment Cancel(Guid id);
         void SendEmailReminder(Appointment appointment);
     }
 

@@ -12,7 +12,6 @@ namespace RealEstate.Domain.DomainModels
         public string Name { get; set; }
         public string Email { get; set; }
         public string Phone { get; set; }
-        public ICollection<Property> Properties { get; set; } = new List<Property>();
         public ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
         public virtual ICollection<AgentProperty> AgentProperties { get; set; } = new List<AgentProperty>();
     }

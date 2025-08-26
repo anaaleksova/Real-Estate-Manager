@@ -8,57 +8,44 @@ using RealEstate.Repository;
 using RealEstate.Service.Interface;
 using Newtonsoft.Json;
 using RealEstate.Domain.DTO;
+using System.Net.Http.Json;
+using System.Net.Http;
 
 namespace RealEstate.Service.Implementation
 {
     public class ExternalPropertyService : IExternalPropertyService
     {
-        private readonly IRepository<Property> _propertyRepository;
+        private readonly IPropertyService _propertyService;
         private readonly IRepository<AgentProperty> _agentPropertyRepository;
         private readonly HttpClient _httpClient;
 
-        public ExternalPropertyService(
-            IRepository<Property> propertyRepository,
+        public ExternalPropertyService(IHttpClientFactory httpClientFactory,
+            IPropertyService propertyService,
             IRepository<AgentProperty> agentPropertyRepository)
         {
-            _propertyRepository = propertyRepository;
+            _propertyService = propertyService;
             _agentPropertyRepository = agentPropertyRepository;
             _httpClient = new HttpClient();
         }
 
-        public async Task ImportExternalProperties(Guid agentId)
+        public async Task<List<Property>> FetchExternalProperties()
         {
-            var response = await _httpClient.GetAsync("https://api.example.com/properties");
-            if (!response.IsSuccessStatusCode)
+            var externalProperties = await _httpClient.GetFromJsonAsync<List<ExternalPropertyDTO>>("https://68947444be3700414e133d24.mockapi.io/properties");
+
+
+            var newProperties = externalProperties.Select(x => new Property
             {
-                throw new Exception("Failed to fetch properties from external API.");
-            }
+                Id = Guid.NewGuid(),
+                Title = x.Title,
+                Address = x.Location,
+                Description = x.Summary,
+                Price = x.Price,
+                Status = "Available"
+            }).ToList();
 
-            var jsonData = await response.Content.ReadAsStringAsync();
-            var externalProperties = JsonConvert.DeserializeObject<List<ExternalPropertyDTO>>(jsonData);
+            _propertyService.InsertMany(newProperties);
 
-            foreach (var item in externalProperties)
-            {
-                var property = new Property
-                {
-                    Id = Guid.NewGuid(),
-                    Title = item.Title,
-                    Address = item.Location,
-                    Description = item.Summary,
-                    Price = item.Price,
-                    Status = "Available"
-                };
-
-                var createdProperty = _propertyRepository.Insert(property);
-
-                var agentProperty = new AgentProperty
-                {
-                    Id = Guid.NewGuid(),
-                    AgentId = agentId,
-                    PropertyId = createdProperty.Id
-                };
-                _agentPropertyRepository.Insert(agentProperty);
-            }
+            return newProperties;
         }
     }
 }

@@ -55,12 +55,12 @@ namespace RealEstate.Web.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(Agent agent)
         {
-            if (agent.Properties == null)
-                agent.Properties = new List<Property>();
-            if (agent.Appointments == null)
-                agent.Appointments = new List<Appointment>();
-            if (agent.AgentProperties == null)
-                agent.AgentProperties = new List<AgentProperty>();
+            //if (agent.Properties == null)
+            //    agent.Properties = new List<Property>();
+            //if (agent.Appointments == null)
+            //    agent.Appointments = new List<Appointment>();
+            //if (agent.AgentProperties == null)
+            //    agent.AgentProperties = new List<AgentProperty>();
 
             if (ModelState.IsValid)
             {
@@ -152,7 +152,6 @@ namespace RealEstate.Web.Controllers
         public IActionResult AssignProperty(Guid agentId, Guid propertyId)
         {
             _agentService.AssignAgentToProperty(agentId, propertyId);
-            TempData["Success"] = "Property assigned to agent successfully!";
             return RedirectToAction("ManageProperties", new { id = agentId });
         }
 
@@ -161,7 +160,6 @@ namespace RealEstate.Web.Controllers
         public IActionResult RemoveProperty(Guid agentId, Guid propertyId)
         {
             _agentService.RemoveAgentFromProperty(agentId, propertyId);
-            TempData["Success"] = "Property removed from agent successfully!";
             return RedirectToAction("ManageProperties", new { id = agentId });
         }
     }

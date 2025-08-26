@@ -30,7 +30,7 @@ namespace RealEstate.Service.Implementation
                 Sender = new MailboxAddress("Real Estate App", _mailSettings.SmtpUserName)
             };
 
-          
+
             emailMessage.From.Add(new MailboxAddress("Real Estate App", _mailSettings.SmtpUserName));
 
             emailMessage.To.Add(new MailboxAddress(emailMessageInput.MailTo, emailMessageInput.MailTo));
@@ -59,7 +59,8 @@ namespace RealEstate.Service.Implementation
             }
             catch (SmtpException ex)
             {
-                throw; 
+                Console.WriteLine("Email sending failed: " + ex.Message);
+                return false;
             }
         }
 

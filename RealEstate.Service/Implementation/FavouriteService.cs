@@ -74,9 +74,8 @@ namespace RealEstate.Service.Implementation
 
             if (favorite == null) return;
 
-            var relation = _pifRepository.Get(
-                selector: x => x,
-                predicate: p => p.FavoriteId == favorite.Id && p.PropertyId == propertyId);
+            var relation = _pifRepository.Get(selector: x => x,
+                  predicate: p => p.FavoriteId == favorite.Id && p.PropertyId == propertyId);
 
             if (relation != null)
                 _pifRepository.Delete(relation);

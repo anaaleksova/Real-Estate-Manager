@@ -231,6 +231,10 @@
               "target": "Package",
               "version": "[4.13.0, )"
             },
+            "Microsoft.Extensions.Http": {
+              "target": "Package",
+              "version": "[9.0.6, )"
+            },
             "MimeKit": {
               "target": "Package",
               "version": "[4.13.0, )"

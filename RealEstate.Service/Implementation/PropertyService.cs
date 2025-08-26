@@ -27,10 +27,8 @@ namespace RealEstate.Service.Implementation
 
         public Property DeleteById(Guid id)
         {
-            var property = _propertyRepository.Get(
-                selector: x => x,
-                predicate: x => x.Id == id
-            );
+            var property = _propertyRepository.Get(selector: x => x,
+                                          predicate: x => x.Id == id);
 
             return _propertyRepository.Delete(property);
         }
@@ -55,6 +53,11 @@ namespace RealEstate.Service.Implementation
         public Property Update(Property property)
         {
             return _propertyRepository.Update(property);
+        }
+
+        public ICollection<Property> InsertMany(ICollection<Property> courses)
+        {
+            return _propertyRepository.InsertMany(courses);
         }
     }
 }

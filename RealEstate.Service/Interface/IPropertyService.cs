@@ -14,5 +14,6 @@ namespace RealEstate.Service.Interface
         Property Add(Property property);
         Property Update(Property property);
         Property DeleteById(Guid id);
+        ICollection<Property> InsertMany(ICollection<Property> courses);
     }
 }

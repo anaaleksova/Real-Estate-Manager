@@ -8,14 +8,16 @@ namespace RealEstate.Web.Controllers
     {
         private readonly IPropertyService _propertyService;
         private readonly IAgentService _agentService;
+        private readonly IExternalPropertyService _externalPropertyService;
 
-        public PropertiesController(IPropertyService propertyService, IAgentService agentService)
+        public PropertiesController(IPropertyService propertyService, IAgentService agentService, IExternalPropertyService externalPropertyService)
         {
             _propertyService = propertyService;
             _agentService = agentService;
+            _externalPropertyService = externalPropertyService;
         }
 
-        // GET: Properties - Show all properties (both admin and client view)
+        // GET: Properties
         public IActionResult Index()
         {
             return View(_propertyService.GetAll());
@@ -34,8 +36,6 @@ namespace RealEstate.Web.Controllers
             {
                 return NotFound();
             }
-
-            // Get agents assigned to this property for appointment scheduling
             var agents = _agentService.GetAgentsForProperty(id.Value);
             ViewBag.Agents = agents;
 
@@ -103,14 +103,11 @@ namespace RealEstate.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                // Update property
                 _propertyService.Update(property);
 
-                // Get current agent assignments
                 var currentAgents = _agentService.GetAgentsForProperty(property.Id);
                 var currentAgentIds = currentAgents.Select(a => a.Id).ToList();
 
-                // Remove agents that are no longer selected
                 foreach (var agentId in currentAgentIds)
                 {
                     if (SelectedAgentIds == null || !SelectedAgentIds.Contains(agentId))
@@ -119,7 +116,6 @@ namespace RealEstate.Web.Controllers
                     }
                 }
 
-                // Add newly selected agents
                 if (SelectedAgentIds != null)
                 {
                     foreach (var agentId in SelectedAgentIds)
@@ -162,6 +158,12 @@ namespace RealEstate.Web.Controllers
         public IActionResult DeleteConfirmed(Guid id)
         {
             _propertyService.DeleteById(id);
+            return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> FetchProperties()
+        {
+            await _externalPropertyService.FetchExternalProperties();
             return RedirectToAction(nameof(Index));
         }
     }

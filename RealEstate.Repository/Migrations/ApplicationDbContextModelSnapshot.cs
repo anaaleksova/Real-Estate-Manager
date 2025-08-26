@@ -175,7 +175,7 @@ namespace RealEstate.Repository.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Agents", (string)null);
+                    b.ToTable("Agents");
                 });
 
             modelBuilder.Entity("RealEstate.Domain.DomainModels.AgentProperty", b =>
@@ -196,7 +196,7 @@ namespace RealEstate.Repository.Migrations
 
                     b.HasIndex("PropertyId");
 
-                    b.ToTable("AgentProperties", (string)null);
+                    b.ToTable("AgentProperties");
                 });
 
             modelBuilder.Entity("RealEstate.Domain.DomainModels.Appointment", b =>
@@ -230,7 +230,7 @@ namespace RealEstate.Repository.Migrations
 
                     b.HasIndex("PropertyId");
 
-                    b.ToTable("Appointments", (string)null);
+                    b.ToTable("Appointments");
                 });
 
             modelBuilder.Entity("RealEstate.Domain.DomainModels.Favorite", b =>
@@ -247,7 +247,7 @@ namespace RealEstate.Repository.Migrations
 
                     b.HasIndex("ClientId");
 
-                    b.ToTable("Favorites", (string)null);
+                    b.ToTable("Favorites");
                 });
 
             modelBuilder.Entity("RealEstate.Domain.DomainModels.Property", b =>
@@ -260,8 +260,8 @@ namespace RealEstate.Repository.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("AgentId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("BuyerId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -280,9 +280,9 @@ namespace RealEstate.Repository.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AgentId");
+                    b.HasIndex("BuyerId");
 
-                    b.ToTable("Properties", (string)null);
+                    b.ToTable("Properties");
                 });
 
             modelBuilder.Entity("RealEstate.Domain.DomainModels.PropertyInFavorite", b =>
@@ -303,7 +303,7 @@ namespace RealEstate.Repository.Migrations
 
                     b.HasIndex("PropertyId");
 
-                    b.ToTable("PropertyInFavorites", (string)null);
+                    b.ToTable("PropertyInFavorites");
                 });
 
             modelBuilder.Entity("RealEstate.Domain.EmailMessage", b =>
@@ -326,7 +326,7 @@ namespace RealEstate.Repository.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("EmailMessages", (string)null);
+                    b.ToTable("EmailMessages");
                 });
 
             modelBuilder.Entity("RealEstate.Domain.Identity.ApplicationUser", b =>
@@ -510,9 +510,11 @@ namespace RealEstate.Repository.Migrations
 
             modelBuilder.Entity("RealEstate.Domain.DomainModels.Property", b =>
                 {
-                    b.HasOne("RealEstate.Domain.DomainModels.Agent", null)
-                        .WithMany("Properties")
-                        .HasForeignKey("AgentId");
+                    b.HasOne("RealEstate.Domain.Identity.ApplicationUser", "Buyer")
+                        .WithMany()
+                        .HasForeignKey("BuyerId");
+
+                    b.Navigation("Buyer");
                 });
 
             modelBuilder.Entity("RealEstate.Domain.DomainModels.PropertyInFavorite", b =>
@@ -539,8 +541,6 @@ namespace RealEstate.Repository.Migrations
                     b.Navigation("AgentProperties");
 
                     b.Navigation("Appointments");
-
-                    b.Navigation("Properties");
                 });
 
             modelBuilder.Entity("RealEstate.Domain.DomainModels.Favorite", b =>

@@ -51,15 +51,11 @@ namespace RealEstate.Service.Implementation
 
         public Agent DeleteById(Guid id)
         {
-            var agent = _agentRepository.Get(
-                selector: a => a,
-                predicate: a => a.Id == id);
+            var agent = _agentRepository.Get(selector: a => a,
+                                             predicate: a => a.Id == id);
 
-            if (agent != null)
-            {
-                return _agentRepository.Delete(agent);
-            }
-            return null;
+            return _agentRepository.Delete(agent);
+            
         }
 
         public List<Agent> GetAgentsForProperty(Guid propertyId)

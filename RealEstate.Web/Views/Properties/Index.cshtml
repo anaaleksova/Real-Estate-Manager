@@ -9,15 +9,8 @@
         <a asp-action="Create" class="btn btn-primary">
             <i class="fas fa-plus"></i> Create New Property
         </a>
+        <a class="btn btn-success" asp-action="FetchProperties">Fetch Properties</a>
     </div>
-
-    @if (TempData["Success"] != null)
-    {
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            @TempData["Success"]
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    }
 
     @if (Model.Any())
     {
@@ -68,7 +61,7 @@
                                 </a>
                             </div>
 
-                            @if (User.Identity.IsAuthenticated)
+                            @if (User.Identity.IsAuthenticated && property.Status!="Sold")
                             {
                                 <div class="btn-group w-100" role="group">
                                     <form method="post" action="@Url.Action("Add", "Favorites")" style="display: inline; width: 50%;">

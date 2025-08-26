@@ -4,6 +4,8 @@ using RealEstate.Service.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using RealEstate.Domain.DTO;
+using Stripe;
 
 namespace RealEstate.Web.Controllers
 {
@@ -23,31 +25,64 @@ namespace RealEstate.Web.Controllers
             _agentService = agentService;
         }
 
-        // GET: Appointments (Admin view - all appointments)
+        // GET: Appointments
         public IActionResult Index()
         {
             var appointments = _appointmentService.GetAll();
+            var now = DateTime.Now;
+
+            foreach (var appointment in appointments)
+            {
+                if (appointment.Status != "Completed" && appointment.ScheduledDate <= now)
+                {
+                    appointment.Status = "Completed";
+                    _appointmentService.Update(appointment);
+                }
+            }
+            appointments = _appointmentService.GetAll();
             return View(appointments);
         }
 
-        // GET: My Appointments (User view - their appointments only)
+        // GET: My Appointments
         [Authorize]
         public IActionResult MyAppointments()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var appointments = _appointmentService.GetUserAppointments(userId);
+
+            var now = TimeZoneInfo.ConvertTimeFromUtc(
+            DateTime.UtcNow,
+            TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time")
+);
+
+            foreach (var appointment in appointments)
+            {
+                if (appointment.Status != "Completed" && appointment.ScheduledDate <= now)
+                {
+                    appointment.Status = "Completed";
+                    _appointmentService.Update(appointment);
+                }
+            }
+            appointments = _appointmentService.GetUserAppointments(userId);
             return View(appointments);
         }
 
         // GET: Appointments/Details/5
-        public IActionResult Details(Guid id)
+        public IActionResult Details(Guid? id)
         {
-            var appointment = _appointmentService.GetById(id);
-            if (appointment == null) return NotFound();
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var appointment = _appointmentService.GetById(id.Value);
+            if (appointment == null)
+            {
+                return NotFound();
+            }
             return View(appointment);
         }
 
-        // GET: Appointments/Create (Admin)
+        // GET: Appointments/Create
         public IActionResult Create()
         {
             ViewBag.Properties = new SelectList(_propertyService.GetAll(), "Id", "Title");
@@ -55,18 +90,20 @@ namespace RealEstate.Web.Controllers
             return View();
         }
 
-        // GET: Schedule Appointment (Client - from property page)
+        // GET: Schedule Appointment
         [Authorize]
         public IActionResult Schedule(Guid propertyId)
         {
             var property = _propertyService.GetById(propertyId);
-            if (property == null) return NotFound();
+            if (property == null)
+            {
+                return NotFound();
+            }
 
-            // Get agents assigned to this property
             var agents = _agentService.GetAgentsForProperty(propertyId);
             ViewBag.Agents = agents;
             ViewBag.Property = property;
-            ViewBag.PropertyId = propertyId; // Pass PropertyId directly
+            ViewBag.PropertyId = propertyId;
 
             return View();
         }
@@ -77,65 +114,38 @@ namespace RealEstate.Web.Controllers
         [Authorize]
         public IActionResult Schedule(Appointment appointment)
         {
-            try
+            var propertyIdStr = Request.Form["PropertyId"];
+            var agentIdStr = Request.Form["AgentId"];
+            var scheduledDateStr = Request.Form["ScheduledDate"];
+
+            if (!Guid.TryParse(propertyIdStr, out Guid propertyId) ||
+                !Guid.TryParse(agentIdStr, out Guid agentId) ||
+                !DateTime.TryParse(scheduledDateStr, out DateTime scheduledDate))
             {
-                // Get form values directly from Request.Form
-                var propertyIdStr = Request.Form["PropertyId"];
-                var agentIdStr = Request.Form["AgentId"];
-                var scheduledDateStr = Request.Form["ScheduledDate"];
-
-                // Validate and parse
-                if (!Guid.TryParse(propertyIdStr, out Guid propertyId))
-                {
-                    TempData["Error"] = "Invalid property.";
-                    return RedirectToAction("Index", "Properties");
-                }
-
-                if (!Guid.TryParse(agentIdStr, out Guid agentId) || agentId == Guid.Empty)
-                {
-                    TempData["Error"] = "Please select an agent.";
-                    return RedirectToAction("BookAppointment", new { propertyId = propertyId });
-                }
-
-                if (!DateTime.TryParse(scheduledDateStr, out DateTime scheduledDate))
-                {
-                    TempData["Error"] = "Please select a valid date and time.";
-                    return RedirectToAction("BookAppointment", new { propertyId = propertyId });
-                }
-
-                // Get current user
-                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                if (string.IsNullOrEmpty(userId))
-                {
-                    TempData["Error"] = "Please log in to book an appointment.";
-                    return RedirectToAction("BookAppointment", new { propertyId = propertyId });
-                }
-
-                // Create appointment manually
-                var appointment1 = new Appointment
-                {
-                    Id = Guid.NewGuid(),
-                    PropertyId = propertyId,
-                    ClientId = userId,
-                    AgentId = agentId,
-                    ScheduledDate = scheduledDate,
-                    Status = "Scheduled"
-                };
-
-                // Save appointment
-                _appointmentService.Add(appointment1);
-
-                TempData["Success"] = "Appointment booked successfully!";
-                return RedirectToAction("MyAppointments");
+                return BadRequest("Invalid input.");
             }
-            catch (Exception ex)
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userId))
             {
-                TempData["Error"] = $"Error booking appointment: {ex.Message}";
-                return RedirectToAction("Index", "Properties");
+                return Unauthorized();
             }
+
+            var appointment1 = new Appointment
+            {
+                Id = Guid.NewGuid(),
+                PropertyId = propertyId,
+                ClientId = userId,
+                AgentId = agentId,
+                ScheduledDate = scheduledDate,
+                Status = "Scheduled"
+            };
+
+            _appointmentService.Add(appointment1);
+            return RedirectToAction("MyAppointments");
         }
 
-        // POST: Appointments/Create (Admin)
+        // POST: Appointments/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Create(Appointment appointment)
@@ -143,7 +153,6 @@ namespace RealEstate.Web.Controllers
             if (ModelState.IsValid)
             {
                 _appointmentService.Add(appointment);
-                TempData["Success"] = "Appointment created successfully!";
                 return RedirectToAction(nameof(Index));
             }
 
@@ -156,25 +165,31 @@ namespace RealEstate.Web.Controllers
         public IActionResult Edit(Guid id)
         {
             var appointment = _appointmentService.GetById(id);
-            if (appointment == null) return NotFound();
-
+            if (appointment == null)
+            {
+                return NotFound();
+            }
+            var agents = _agentService.GetAgentsForProperty(appointment.PropertyId);
+            ViewBag.Agents = agents;
             ViewBag.Properties = new SelectList(_propertyService.GetAll(), "Id", "Title", appointment.PropertyId);
-            ViewBag.Agents = new SelectList(_agentService.GetAll(), "Id", "Name", appointment.AgentId);
             return View(appointment);
         }
 
         // POST: Appointments/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(Guid id, Appointment appointment)
+        public IActionResult Edit(Guid id, EditAppointmentDTO appointment)
         {
             if (id != appointment.Id) return NotFound();
 
             if (ModelState.IsValid)
             {
-                _appointmentService.Update(appointment);
-                TempData["Success"] = "Appointment updated successfully!";
-                return RedirectToAction(nameof(Index));
+                var appointment1 = _appointmentService.GetById(id);
+                appointment1.PropertyId = appointment.PropertyId;
+                appointment1.AgentId = appointment.AgentId;
+                appointment1.ScheduledDate = appointment.ScheduledDate;
+                _appointmentService.Update(appointment1);
+                return RedirectToAction(nameof(MyAppointments));
             }
 
             ViewBag.Properties = new SelectList(_propertyService.GetAll(), "Id", "Title", appointment.PropertyId);
@@ -186,7 +201,10 @@ namespace RealEstate.Web.Controllers
         public IActionResult Delete(Guid id)
         {
             var appointment = _appointmentService.GetById(id);
-            if (appointment == null) return NotFound();
+            if (appointment == null)
+            {
+                return NotFound();
+            }
             return View(appointment);
         }
 
@@ -196,8 +214,88 @@ namespace RealEstate.Web.Controllers
         public IActionResult DeleteConfirmed(Guid id)
         {
             _appointmentService.DeleteById(id);
-            TempData["Success"] = "Appointment deleted successfully!";
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(MyAppointments));
         }
+
+        // GET: Appointments/Cancel/5
+        public IActionResult Cancel(Guid id)
+        {
+            var appointment = _appointmentService.GetById(id);
+            if (appointment == null)
+            {
+                return NotFound();
+            }
+            return View(appointment);
+        }
+
+        // POST: Appointments/Cancel/5
+        [HttpPost, ActionName("Cancel")]
+        [ValidateAntiForgeryToken]
+        public IActionResult CancelConfirmed(Guid id)
+        {
+            _appointmentService.Cancel(id);
+            return RedirectToAction(nameof(MyAppointments));
+        }
+        public IActionResult Buy(Guid id)
+        {
+            var property = _propertyService.GetById(id);
+            if (property == null) return NotFound();
+
+            return View(property); 
+        }
+
+        [HttpPost]
+        public IActionResult CreateCheckoutSession(Guid propertyId)
+        {
+            Stripe.StripeConfiguration.ApiKey = "<secret_key>";
+
+            var property = _propertyService.GetById(propertyId);
+            if (property == null)
+                return NotFound();
+
+            var options = new Stripe.Checkout.SessionCreateOptions
+            {
+                PaymentMethodTypes = new List<string> { "card" },
+                LineItems = new List<Stripe.Checkout.SessionLineItemOptions>
+        {
+            new Stripe.Checkout.SessionLineItemOptions
+            {
+                PriceData = new Stripe.Checkout.SessionLineItemPriceDataOptions
+                {
+                    Currency = "usd",
+                    UnitAmount = (long)(property.Price * 100),
+                    ProductData = new Stripe.Checkout.SessionLineItemPriceDataProductDataOptions
+                    {
+                        Name = property.Title
+                    }
+                },
+                Quantity = 1
+            }
+        },
+                Mode = "payment",
+                SuccessUrl = Url.Action("SuccessPayment", "Appointments", new { propertyId = propertyId }, Request.Scheme),
+                CancelUrl = Url.Action("CancelPayment", "Appointments", null, Request.Scheme),
+            };
+
+            var service = new Stripe.Checkout.SessionService();
+            var session = service.Create(options);
+
+            return Redirect(session.Url);
+        }
+
+        public IActionResult SuccessPayment(Guid propertyId)
+        {
+            var property = _propertyService.GetById(propertyId);
+            if (property != null)
+            {
+                property.Status = "Sold";
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                property.BuyerId = userId;
+                _propertyService.Update(property);
+            }
+           
+            return View();
+        }
+
     }
 }

@@ -6,6 +6,7 @@ using RealEstate.Repository;
 using RealEstate.Service.Implementation;
 using RealEstate.Service.Interface;
 
+
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddEntityFrameworkStores<ApplicationDbContext>();
@@ -17,7 +18,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
+builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
 
+builder.Services.AddHttpClient();
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
@@ -30,8 +33,6 @@ builder.Services.AddTransient<IAgentService, AgentService>();
 builder.Services.AddTransient<IExternalPropertyService, ExternalPropertyService>();
 builder.Services.AddTransient<IEmailService, EmailService>();
 var app = builder.Build();
-
-
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

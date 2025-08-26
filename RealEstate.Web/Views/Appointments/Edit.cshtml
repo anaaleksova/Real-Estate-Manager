@@ -1,0 +1,136 @@
+﻿@model RealEstate.Domain.DomainModels.Appointment
+@{
+    ViewData["Title"] = "Edit Appointment";
+    var agents = ViewBag.Agents as List<RealEstate.Domain.DomainModels.Agent>;
+    var property = ViewBag.Property as RealEstate.Domain.DomainModels.Property;
+}
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Edit Appointment</h2>
+        <a href="@Url.Action("MyAppointments")" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back to My Appointments
+        </a>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-edit"></i> Edit Appointment Details</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        <input type="hidden" asp-for="Id" />
+                        <input type="hidden" asp-for="PropertyId" />
+                        <input type="hidden" asp-for="ClientId" />
+
+                        <div class="mb-3">
+                            <label class="form-label">
+                                <i class="fas fa-home"></i> Property
+                            </label>
+                            <input type="text" class="form-control" value="@Model.Property?.Title" readonly />
+                            <small class="form-text text-muted">@Model.Property?.Address</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="AgentId" class="form-label">
+                                <i class="fas fa-user-tie"></i> Select Agent <span class="text-danger">*</span>
+                            </label>
+                            <select name="AgentId" id="AgentId" class="form-select" required>
+                                <option value="">Choose an agent...</option>
+                                @if (agents != null && agents.Any())
+                                {
+                                    @foreach (var agent in agents)
+                                    {
+                                        <option value="@agent.Id" selected="@(agent.Id == Model.AgentId)">
+                                            @agent.Name - @agent.Email
+                                        </option>
+                                    }
+                                }
+                                else
+                                {
+                                    <option value="" disabled>No agents available</option>
+                                }
+                            </select>
+                            @if (agents == null || !agents.Any())
+                            {
+                                <small class="form-text text-danger">No agents are currently assigned to this property. Please contact an administrator.</small>
+                            }
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="ScheduledDate" class="form-label">
+                                <i class="fas fa-calendar-alt"></i> Date & Time <span class="text-danger">*</span>
+                            </label>
+                            <input name="ScheduledDate" id="ScheduledDate" type="datetime-local" 
+                                   class="form-control" value="@Model.ScheduledDate.ToString("yyyy-MM-ddTHH:mm")" required />
+                            <small class="form-text text-muted">Please select a future date and time during business hours</small>
+                        </div>
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="@Url.Action("MyAppointments")" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Cancel
+                            </a>
+                            @if (agents != null && agents.Any())
+                            {
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save"></i> Update Appointment
+                                </button>
+                            }
+                            else
+                            {
+                                <button type="button" class="btn btn-primary" disabled>
+                                    <i class="fas fa-exclamation-triangle"></i> No Agents Available
+                                </button>
+                            }
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h6><i class="fas fa-home"></i> Property Details</h6>
+                </div>
+                <div class="card-body">
+                    <h6><strong>@Model.Property?.Title</strong></h6>
+                    <p class="mb-1"><i class="fas fa-map-marker-alt"></i> @Model.Property?.Address</p>
+                    <p class="mb-1"><strong>Price:</strong> $@Model.Property?.Price.ToString("N0")</p>
+                    <p class="mb-0">
+                        <strong>Status:</strong>
+                        <span>
+                            @Model.Property?.Status
+                        </span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var dateInput = document.getElementById('ScheduledDate');
+        if (dateInput) {
+            var now = new Date();
+            var year = now.getFullYear();
+            var month = (now.getMonth() + 1).toString().padStart(2, '0');
+            var day = now.getDate().toString().padStart(2, '0');
+            var hours = now.getHours().toString().padStart(2, '0');
+            var minutes = now.getMinutes().toString().padStart(2, '0');
+
+            var minDateTime = year + '-' + month + '-' + day + 'T' + hours + ':' + minutes;
+            dateInput.min = minDateTime;
+        }
+
+        var agentSelect = document.getElementById('AgentId');
+        if (agentSelect) {
+            console.log('Agent options count:', agentSelect.options.length);
+            if (agentSelect.options.length <= 1) {
+                console.warn('No agents loaded for this property');
+            }
+        }
+    });
+</script>
